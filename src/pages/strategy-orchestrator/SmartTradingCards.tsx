@@ -137,7 +137,20 @@ const SmartTradingCards: React.FC = () => {
         }
 
         if (conditionMet) {
-            executeTrade('over-under', overUnderCondition.targetValue, overUnderSettings);
+            console.log('[CONDITION] Over/Under condition met! Loading Raziel bot and executing trade...');
+            
+            // Load Raziel Over Under bot when condition is met
+            window.dispatchEvent(new CustomEvent('load.bot.file', {
+                detail: { 
+                    botFile: 'Raziel Over Under.xml',
+                    source: 'smart-trading-over-under-condition'
+                }
+            }));
+
+            // Wait for bot to load, then execute trade
+            setTimeout(() => {
+                executeTrade('over-under', overUnderCondition.targetValue, overUnderSettings);
+            }, 1500);
         }
     };
 
@@ -179,18 +192,6 @@ const SmartTradingCards: React.FC = () => {
 
     const toggleOverUnderTrading = async () => {
         if (!overUnderActive) {
-            // Load Raziel Over Under bot
-            console.log('[LOAD] Loading Raziel Over Under bot...');
-            window.dispatchEvent(new CustomEvent('load.bot.file', {
-                detail: { 
-                    botFile: 'Raziel Over Under.xml',
-                    source: 'smart-trading-over-under'
-                }
-            }));
-
-            // Wait a moment for bot to load
-            await new Promise(resolve => setTimeout(resolve, 1000));
-
             // Initialize executor before starting
             const initialized = await smartTradingExecutor.initialize();
             if (!initialized) {
@@ -201,7 +202,7 @@ const SmartTradingCards: React.FC = () => {
         
         setOverUnderActive(!overUnderActive);
         if (!overUnderActive) {
-            console.log('[START] Over/Under Auto Trading Started');
+            console.log('[START] Over/Under Auto Trading Started - Waiting for conditions...');
         } else {
             console.log('[STOP] Over/Under Auto Trading Stopped');
         }
