@@ -117,41 +117,76 @@ const SmartTradingCards: React.FC = () => {
     const checkOverUnderCondition = (result: AnalysisResult) => {
         const prob = overUnderCondition.targetValue === 'Over' ? overProb : underProb;
         
-        let conditionMet = false;
+        // Check main probability condition
+        let mainConditionMet = false;
         switch (overUnderCondition.comparison) {
             case '>':
-                conditionMet = prob > overUnderCondition.threshold;
+                mainConditionMet = prob > overUnderCondition.threshold;
                 break;
             case '>=':
-                conditionMet = prob >= overUnderCondition.threshold;
+                mainConditionMet = prob >= overUnderCondition.threshold;
                 break;
             case '<':
-                conditionMet = prob < overUnderCondition.threshold;
+                mainConditionMet = prob < overUnderCondition.threshold;
                 break;
             case '<=':
-                conditionMet = prob <= overUnderCondition.threshold;
+                mainConditionMet = prob <= overUnderCondition.threshold;
                 break;
             case '=':
-                conditionMet = Math.abs(prob - overUnderCondition.threshold) < 0.1;
+                mainConditionMet = Math.abs(prob - overUnderCondition.threshold) < 0.1;
                 break;
         }
 
-        if (conditionMet) {
-            console.log('[CONDITION] Over/Under condition met! Loading Raziel bot and executing trade...');
-            
-            // Load Raziel Over Under bot when condition is met
-            window.dispatchEvent(new CustomEvent('load.bot.file', {
-                detail: { 
-                    botFile: 'Raziel Over Under.xml',
-                    source: 'smart-trading-over-under-condition'
-                }
-            }));
-
-            // Wait for bot to load, then execute trade
-            setTimeout(() => {
-                executeTrade('over-under', overUnderCondition.targetValue, overUnderSettings);
-            }, 1500);
+        // If main condition is not met, don't proceed
+        if (!mainConditionMet) {
+            return;
         }
+
+        // Check optional "last N ticks" condition if enabled
+        if (overUnderCondition.enabled) {
+            // Get the last N ticks from the result data
+            const tickHistory = result.data.tickHistory || [];
+            const lastNTicks = tickHistory.slice(-overUnderCondition.lastNTicks);
+            
+            // Check if all last N ticks match the target (Over or Under)
+            const allMatch = lastNTicks.every((tick: any) => {
+                const lastDigit = parseInt(tick.toString().slice(-1));
+                if (overUnderCondition.targetValue === 'Over') {
+                    return lastDigit > barrier;
+                } else {
+                    return lastDigit < barrier;
+                }
+            });
+
+            // If the "last N ticks" condition is not met, don't proceed
+            if (!allMatch) {
+                console.log('[CONDITION] Main condition met, but last N ticks condition not satisfied');
+                return;
+            }
+        }
+
+        // All conditions met! Load bot and execute trade
+        console.log('[CONDITION] All Over/Under conditions met! Loading Raziel bot and executing trade...');
+        console.log('[CONDITION] Details:', {
+            probability: prob,
+            threshold: overUnderCondition.threshold,
+            comparison: overUnderCondition.comparison,
+            lastNTicksEnabled: overUnderCondition.enabled,
+            lastNTicks: overUnderCondition.lastNTicks
+        });
+        
+        // Load Raziel Over Under bot when ALL conditions are met
+        window.dispatchEvent(new CustomEvent('load.bot.file', {
+            detail: { 
+                botFile: 'Raziel Over Under.xml',
+                source: 'smart-trading-over-under-condition'
+            }
+        }));
+
+        // Wait for bot to load, then execute trade
+        setTimeout(() => {
+            executeTrade('over-under', overUnderCondition.targetValue, overUnderSettings);
+        }, 1500);
     };
 
     const checkEvenOddCondition = (result: AnalysisResult) => {
