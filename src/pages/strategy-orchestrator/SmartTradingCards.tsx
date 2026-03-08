@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { marketAnalyzer, AnalysisResult } from '@/services/market-analyzer.service';
+import { smartTradingExecutor, SmartTradeConfig } from '@/services/smart-trading-executor.service';
 import './SmartTradingCards.scss';
 
 interface TradingCondition {
@@ -126,7 +127,7 @@ const SmartTradingCards: React.FC = () => {
         }
     };
 
-    const executeTrade = (type: string, prediction: string, settings: TradingSettings) => {
+    const executeTrade = async (type: string, prediction: string, settings: TradingSettings) => {
         console.log(`🚀 Executing ${type} trade:`, {
             prediction,
             stake: settings.stake,
@@ -134,18 +135,33 @@ const SmartTradingCards: React.FC = () => {
             martingale: settings.martingale,
         });
 
-        // Emit event for bot execution
-        window.dispatchEvent(new CustomEvent('smart-trading:execute', {
-            detail: {
-                type,
-                prediction,
-                settings,
-                timestamp: Date.now(),
-            }
-        }));
+        const tradeConfig: SmartTradeConfig = {
+            type: type as 'over-under' | 'even-odd',
+            prediction,
+            settings,
+            symbol: marketAnalyzer.getStatus().symbol,
+        };
+
+        // Execute trade via smart trading executor
+        const result = await smartTradingExecutor.executeTrade(tradeConfig);
+
+        if (result.success) {
+            console.log('✅ Trade executed successfully:', result);
+        } else {
+            console.error('❌ Trade failed:', result.error);
+        }
     };
 
-    const toggleOverUnderTrading = () => {
+    const toggleOverUnderTrading = async () => {
+        if (!overUnderActive) {
+            // Initialize executor before starting
+            const initialized = await smartTradingExecutor.initialize();
+            if (!initialized) {
+                alert('Failed to connect to Deriv API. Please make sure you are logged in.');
+                return;
+            }
+        }
+        
         setOverUnderActive(!overUnderActive);
         if (!overUnderActive) {
             console.log('✅ Over/Under Auto Trading Started');
@@ -154,7 +170,16 @@ const SmartTradingCards: React.FC = () => {
         }
     };
 
-    const toggleEvenOddTrading = () => {
+    const toggleEvenOddTrading = async () => {
+        if (!evenOddActive) {
+            // Initialize executor before starting
+            const initialized = await smartTradingExecutor.initialize();
+            if (!initialized) {
+                alert('Failed to connect to Deriv API. Please make sure you are logged in.');
+                return;
+            }
+        }
+        
         setEvenOddActive(!evenOddActive);
         if (!evenOddActive) {
             console.log('✅ Even/Odd Auto Trading Started');
