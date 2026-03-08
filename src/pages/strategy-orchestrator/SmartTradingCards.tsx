@@ -1,6 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { marketAnalyzer, AnalysisResult } from '@/services/market-analyzer.service';
 import { smartTradingExecutor, SmartTradeConfig, TradeHistory } from '@/services/smart-trading-executor.service';
+import { 
+    CheckIcon, 
+    CrossIcon, 
+    ClockIcon, 
+    ArrowUpIcon, 
+    ArrowDownIcon,
+    ChartIcon,
+    CogwheelIcon,
+    BoltIcon
+} from './MechanicalIcons';
 import './SmartTradingCards.scss';
 
 interface TradingCondition {
@@ -143,7 +153,7 @@ const SmartTradingCards: React.FC = () => {
     };
 
     const executeTrade = async (type: string, prediction: string, settings: TradingSettings) => {
-        console.log(`🚀 Executing ${type} trade:`, {
+        console.log(`[EXECUTE] ${type} trade:`, {
             prediction,
             stake: settings.stake,
             ticks: settings.ticks,
@@ -161,9 +171,9 @@ const SmartTradingCards: React.FC = () => {
         const result = await smartTradingExecutor.executeTrade(tradeConfig);
 
         if (result.success) {
-            console.log('✅ Trade executed successfully:', result);
+            console.log('[SUCCESS] Trade executed successfully:', result);
         } else {
-            console.error('❌ Trade failed:', result.error);
+            console.error('[ERROR] Trade failed:', result.error);
         }
     };
 
@@ -179,9 +189,9 @@ const SmartTradingCards: React.FC = () => {
         
         setOverUnderActive(!overUnderActive);
         if (!overUnderActive) {
-            console.log('✅ Over/Under Auto Trading Started');
+            console.log('[START] Over/Under Auto Trading Started');
         } else {
-            console.log('🛑 Over/Under Auto Trading Stopped');
+            console.log('[STOP] Over/Under Auto Trading Stopped');
         }
     };
 
@@ -197,9 +207,9 @@ const SmartTradingCards: React.FC = () => {
         
         setEvenOddActive(!evenOddActive);
         if (!evenOddActive) {
-            console.log('✅ Even/Odd Auto Trading Started');
+            console.log('[START] Even/Odd Auto Trading Started');
         } else {
-            console.log('🛑 Even/Odd Auto Trading Stopped');
+            console.log('[STOP] Even/Odd Auto Trading Stopped');
         }
     };
 
@@ -498,22 +508,40 @@ const SmartTradingCards: React.FC = () => {
             {recentTrades.length > 0 && (
                 <div className='recent-trades-section'>
                     <h3 className='recent-trades-title'>
+                        <ChartIcon size={20} />
                         Recent Trades 
-                        <span className='recent-trades-subtitle'>(View all in Transactions drawer →)</span>
+                        <span className='recent-trades-subtitle'>(View all in Transactions drawer)</span>
                     </h3>
                     <div className='recent-trades-list'>
                         {recentTrades.map((trade, index) => (
                             <div key={trade.id} className={`trade-item ${trade.result}`}>
                                 <div className='trade-info'>
-                                    <span className='trade-type'>{trade.prediction}</span>
-                                    <span className='trade-time'>
-                                        {new Date(trade.timestamp).toLocaleTimeString()}
-                                    </span>
+                                    <div className='trade-type-wrapper'>
+                                        {trade.result === 'win' ? (
+                                            <CheckIcon size={16} className='trade-icon win' />
+                                        ) : (
+                                            <CrossIcon size={16} className='trade-icon loss' />
+                                        )}
+                                        <span className='trade-type'>{trade.prediction}</span>
+                                    </div>
+                                    <div className='trade-time-wrapper'>
+                                        <ClockIcon size={14} className='trade-clock' />
+                                        <span className='trade-time'>
+                                            {new Date(trade.timestamp).toLocaleTimeString()}
+                                        </span>
+                                    </div>
                                 </div>
                                 <div className='trade-result'>
-                                    <span className={`trade-profit ${trade.result}`}>
-                                        {trade.result === 'win' ? '+' : ''}{trade.profit.toFixed(2)}
-                                    </span>
+                                    <div className='trade-profit-wrapper'>
+                                        {trade.result === 'win' ? (
+                                            <ArrowUpIcon size={16} className='profit-arrow' />
+                                        ) : (
+                                            <ArrowDownIcon size={16} className='profit-arrow' />
+                                        )}
+                                        <span className={`trade-profit ${trade.result}`}>
+                                            {trade.result === 'win' ? '+' : ''}{trade.profit.toFixed(2)}
+                                        </span>
+                                    </div>
                                     <span className='trade-stake'>Stake: ${trade.stake.toFixed(2)}</span>
                                 </div>
                             </div>
@@ -521,14 +549,21 @@ const SmartTradingCards: React.FC = () => {
                     </div>
                     <div className='trades-stats'>
                         <div className='stat-item'>
+                            <CogwheelIcon size={18} className='stat-icon' />
                             <span className='stat-label'>Total Trades:</span>
                             <span className='stat-value'>{smartTradingExecutor.getStatistics().totalTrades}</span>
                         </div>
                         <div className='stat-item'>
+                            <BoltIcon size={18} className='stat-icon' />
                             <span className='stat-label'>Win Rate:</span>
                             <span className='stat-value'>{smartTradingExecutor.getStatistics().winRate.toFixed(1)}%</span>
                         </div>
                         <div className='stat-item'>
+                            {smartTradingExecutor.getStatistics().totalProfit >= 0 ? (
+                                <ArrowUpIcon size={18} className='stat-icon positive' />
+                            ) : (
+                                <ArrowDownIcon size={18} className='stat-icon negative' />
+                            )}
                             <span className='stat-label'>Total Profit:</span>
                             <span className={`stat-value ${smartTradingExecutor.getStatistics().totalProfit >= 0 ? 'positive' : 'negative'}`}>
                                 ${smartTradingExecutor.getStatistics().totalProfit.toFixed(2)}

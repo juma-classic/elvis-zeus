@@ -46,12 +46,12 @@ class SmartTradingExecutorService {
      */
     public async initialize(): Promise<boolean> {
         try {
-            console.log('🚀 Initializing Smart Trading Executor...');
+            console.log('[INIT] Initializing Smart Trading Executor...');
             
             // Check if we have auth token
             const token = derivAPI.getAuthToken();
             if (!token) {
-                console.warn('⚠️ No auth token found. User needs to login first.');
+                console.warn('[WARN] No auth token found. User needs to login first.');
                 this.emit('error', { message: 'Please login to Deriv first' });
                 return false;
             }
@@ -61,12 +61,12 @@ class SmartTradingExecutorService {
             
             // Authorize
             const accountInfo = await derivAPI.authorize();
-            console.log('✅ Smart Trading Executor initialized:', accountInfo);
+            console.log('[SUCCESS] Smart Trading Executor initialized:', accountInfo);
             
             this.emit('initialized', accountInfo);
             return true;
         } catch (error) {
-            console.error('❌ Failed to initialize Smart Trading Executor:', error);
+            console.error('[ERROR] Failed to initialize Smart Trading Executor:', error);
             this.emit('error', { message: error instanceof Error ? error.message : 'Initialization failed' });
             return false;
         }
@@ -77,14 +77,14 @@ class SmartTradingExecutorService {
      */
     public async executeTrade(config: SmartTradeConfig): Promise<TradeResult> {
         if (this.isExecuting) {
-            console.warn('⚠️ Trade already in progress, skipping...');
+            console.warn('[WARN] Trade already in progress, skipping...');
             return { success: false, error: 'Trade already in progress' };
         }
 
         this.isExecuting = true;
 
         try {
-            console.log('📊 Executing smart trade:', config);
+            console.log('[TRADE] Executing smart trade:', config);
 
             // Check if API is ready
             if (!derivAPI.isReady()) {
@@ -145,14 +145,14 @@ class SmartTradingExecutorService {
                 streakType: this.lastResult,
             });
 
-            console.log(`${tradeRecord.result === 'win' ? '✅' : '❌'} Trade ${tradeRecord.result}:`, {
+            console.log(`[${tradeRecord.result.toUpperCase()}] Trade ${tradeRecord.result}:`, {
                 profit: tradeRecord.profit,
                 streak: this.currentStreak,
             });
 
             return result;
         } catch (error) {
-            console.error('❌ Trade execution failed:', error);
+            console.error('[ERROR] Trade execution failed:', error);
             
             const errorResult: TradeResult = {
                 success: false,
@@ -175,7 +175,7 @@ class SmartTradingExecutorService {
             // Access the global store (if available)
             const rootStore = (window as any).Blockly?.derivWorkspace?.store?.root_store;
             if (!rootStore || !rootStore.transactions) {
-                console.log('ℹ️ Transactions store not available');
+                console.log('[INFO] Transactions store not available');
                 return;
             }
 
@@ -202,9 +202,9 @@ class SmartTradingExecutorService {
 
             // Push to transactions
             rootStore.transactions.pushTransaction(contractInfo);
-            console.log('✅ Trade added to transactions drawer');
+            console.log('[SUCCESS] Trade added to transactions drawer');
         } catch (error) {
-            console.error('Error pushing to transactions drawer:', error);
+            console.error('[ERROR] Failed to push to transactions drawer:', error);
         }
     }
 
@@ -322,7 +322,7 @@ class SmartTradingExecutorService {
     public resetStreak(): void {
         this.currentStreak = 0;
         this.lastResult = null;
-        console.log('🔄 Streak reset');
+        console.log('[RESET] Streak reset');
     }
 
     /**
@@ -333,7 +333,7 @@ class SmartTradingExecutorService {
         this.currentStreak = 0;
         this.lastResult = null;
         this.saveHistoryToStorage();
-        console.log('🗑️ Trade history cleared');
+        console.log('[CLEAR] Trade history cleared');
     }
 
     /**
@@ -347,10 +347,10 @@ class SmartTradingExecutorService {
                 this.tradeHistory = data.history || [];
                 this.currentStreak = data.currentStreak || 0;
                 this.lastResult = data.lastResult || null;
-                console.log('✅ Loaded trade history from storage');
+                console.log('[LOAD] Loaded trade history from storage');
             }
         } catch (error) {
-            console.error('Error loading trade history:', error);
+            console.error('[ERROR] Failed to load trade history:', error);
         }
     }
 
@@ -366,7 +366,7 @@ class SmartTradingExecutorService {
             };
             localStorage.setItem('smart_trading_history', JSON.stringify(data));
         } catch (error) {
-            console.error('Error saving trade history:', error);
+            console.error('[ERROR] Failed to save trade history:', error);
         }
     }
 
