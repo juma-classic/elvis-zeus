@@ -45,11 +45,11 @@ class EnhancedConnectionManagerService {
 
     private connectionStrategies = [
         // Primary strategy: Multiple app IDs with different servers
-        { appId: '117918', server: 'ws.binaryws.com' },
+        { appId: '110800', server: 'ws.binaryws.com' },
         { appId: '1089', server: 'ws.binaryws.com' },
         { appId: '16929', server: 'ws.binaryws.com' },
         // Backup strategy: Different endpoints
-        { appId: '117918', server: 'frontend.binaryws.com' },
+        { appId: '110800', server: 'frontend.binaryws.com' },
         { appId: '1089', server: 'frontend.binaryws.com' },
     ];
 

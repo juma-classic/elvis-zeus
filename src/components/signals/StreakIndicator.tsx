@@ -183,7 +183,7 @@ export const StreakIndicator: React.FC<StreakIndicatorProps> = ({
                                     : 'Reconnecting to Deriv API...'}
                             </span>
                             <span className='sub-message'>
-                                Using App ID: {connectionStats?.appId || '117918'} • No demo fallback
+                                Using App ID: {connectionStats?.appId || '110800'} • No demo fallback
                             </span>
                             {connectionStats?.retryCount > 0 && (
                                 <span className='retry-message'>
