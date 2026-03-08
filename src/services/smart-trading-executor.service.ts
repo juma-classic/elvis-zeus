@@ -134,6 +134,9 @@ class SmartTradingExecutorService {
                 this.lastResult = 'loss';
             }
 
+            // Push to transactions drawer (if available)
+            this.pushToTransactionsDrawer(result, config, stake);
+
             // Emit trade result
             this.emit('trade-executed', {
                 trade: tradeRecord,
@@ -162,6 +165,60 @@ class SmartTradingExecutorService {
         } finally {
             this.isExecuting = false;
         }
+    }
+
+    /**
+     * Push trade to transactions drawer
+     */
+    private pushToTransactionsDrawer(result: TradeResult, config: SmartTradeConfig, stake: number): void {
+        try {
+            // Access the global store (if available)
+            const rootStore = (window as any).Blockly?.derivWorkspace?.store?.root_store;
+            if (!rootStore || !rootStore.transactions) {
+                console.log('ℹ️ Transactions store not available');
+                return;
+            }
+
+            // Create contract info object matching the expected format
+            const contractInfo = {
+                contract_id: result.contractId,
+                contract_type: this.getContractTypeDisplay(config.prediction),
+                currency: 'USD',
+                date_start: Math.floor(Date.now() / 1000),
+                buy_price: stake,
+                payout: result.payout || 0,
+                bid_price: result.payout || 0,
+                profit: result.profit || 0,
+                is_completed: true,
+                transaction_ids: {
+                    buy: parseInt(result.contractId || Date.now().toString()),
+                },
+                underlying: config.symbol || 'R_100',
+                entry_tick_display_value: '-',
+                exit_tick_display_value: '-',
+                entry_tick_time: Math.floor(Date.now() / 1000),
+                exit_tick_time: Math.floor(Date.now() / 1000),
+            };
+
+            // Push to transactions
+            rootStore.transactions.pushTransaction(contractInfo);
+            console.log('✅ Trade added to transactions drawer');
+        } catch (error) {
+            console.error('Error pushing to transactions drawer:', error);
+        }
+    }
+
+    /**
+     * Get display name for contract type
+     */
+    private getContractTypeDisplay(prediction: string): string {
+        const typeMap: Record<string, string> = {
+            'EVEN': 'Even',
+            'ODD': 'Odd',
+            'OVER': 'Over',
+            'UNDER': 'Under',
+        };
+        return typeMap[prediction] || prediction;
     }
 
     /**

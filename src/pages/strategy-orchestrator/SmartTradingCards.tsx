@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { marketAnalyzer, AnalysisResult } from '@/services/market-analyzer.service';
-import { smartTradingExecutor, SmartTradeConfig } from '@/services/smart-trading-executor.service';
+import { smartTradingExecutor, SmartTradeConfig, TradeHistory } from '@/services/smart-trading-executor.service';
 import './SmartTradingCards.scss';
 
 interface TradingCondition {
@@ -55,6 +55,9 @@ const SmartTradingCards: React.FC = () => {
     });
     const [evenOddActive, setEvenOddActive] = useState(false);
 
+    // Recent trades state
+    const [recentTrades, setRecentTrades] = useState<TradeHistory[]>([]);
+
     useEffect(() => {
         // Listen to market analyzer analysis results
         const handleAnalysis = (result: AnalysisResult) => {
@@ -82,10 +85,22 @@ const SmartTradingCards: React.FC = () => {
             }
         };
 
+        // Listen to trade execution events
+        const handleTradeExecuted = () => {
+            // Update recent trades list
+            const trades = smartTradingExecutor.getTradeHistory(5);
+            setRecentTrades(trades);
+        };
+
         marketAnalyzer.on('analysis', handleAnalysis);
+        smartTradingExecutor.on('trade-executed', handleTradeExecuted);
+
+        // Load initial trade history
+        setRecentTrades(smartTradingExecutor.getTradeHistory(5));
 
         return () => {
             marketAnalyzer.off('analysis', handleAnalysis);
+            smartTradingExecutor.off('trade-executed', handleTradeExecuted);
         };
     }, [overUnderActive, overUnderCondition, evenOddActive, evenOddCondition]);
 
@@ -478,6 +493,50 @@ const SmartTradingCards: React.FC = () => {
                     </button>
                 </div>
             </div>
+
+            {/* Recent Trades Section */}
+            {recentTrades.length > 0 && (
+                <div className='recent-trades-section'>
+                    <h3 className='recent-trades-title'>
+                        Recent Trades 
+                        <span className='recent-trades-subtitle'>(View all in Transactions drawer →)</span>
+                    </h3>
+                    <div className='recent-trades-list'>
+                        {recentTrades.map((trade, index) => (
+                            <div key={trade.id} className={`trade-item ${trade.result}`}>
+                                <div className='trade-info'>
+                                    <span className='trade-type'>{trade.prediction}</span>
+                                    <span className='trade-time'>
+                                        {new Date(trade.timestamp).toLocaleTimeString()}
+                                    </span>
+                                </div>
+                                <div className='trade-result'>
+                                    <span className={`trade-profit ${trade.result}`}>
+                                        {trade.result === 'win' ? '+' : ''}{trade.profit.toFixed(2)}
+                                    </span>
+                                    <span className='trade-stake'>Stake: ${trade.stake.toFixed(2)}</span>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                    <div className='trades-stats'>
+                        <div className='stat-item'>
+                            <span className='stat-label'>Total Trades:</span>
+                            <span className='stat-value'>{smartTradingExecutor.getStatistics().totalTrades}</span>
+                        </div>
+                        <div className='stat-item'>
+                            <span className='stat-label'>Win Rate:</span>
+                            <span className='stat-value'>{smartTradingExecutor.getStatistics().winRate.toFixed(1)}%</span>
+                        </div>
+                        <div className='stat-item'>
+                            <span className='stat-label'>Total Profit:</span>
+                            <span className={`stat-value ${smartTradingExecutor.getStatistics().totalProfit >= 0 ? 'positive' : 'negative'}`}>
+                                ${smartTradingExecutor.getStatistics().totalProfit.toFixed(2)}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
