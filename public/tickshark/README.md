@@ -28,7 +28,7 @@ Trades execute ONLY when:
 - ❌ No execution from raw UI or tick events
 
 ### 4. Trade Lock Protection
-- **Global trade lock** prevents double execution
+- **Zeus Trading Hub trade lock** prevents double execution
 - Lock immediately when execution starts
 - Unlock only after WebSocket response OR safety timeout (≥1000ms)
 - All execution attempts while locked are rejected

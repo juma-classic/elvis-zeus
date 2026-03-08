@@ -1,7 +1,7 @@
 # Copy Trading Implementation - COMPLETE ✅
 
 ## Overview
-Successfully implemented a fully functional Copy Trading feature for Global Trades that allows users to copy trades from their logged-in account to multiple follower accounts in real-time.
+Successfully implemented a fully functional Copy Trading feature for Zeus Trading Hub that allows users to copy trades from their logged-in account to multiple follower accounts in real-time.
 
 ## Implementation Details
 
@@ -135,7 +135,7 @@ class CopyTradingManager {
 - Uses existing `robust-websocket-manager.js`
 - Integrates with main app authentication
 - Reads token from localStorage (`active_loginid_token`)
-- Uses app ID 119552 (Global Trades)
+- Uses app ID 119552 (Zeus Trading Hub)
 
 ### Navigation Integration
 - Added Copy Trading tab after DTrader
@@ -194,7 +194,7 @@ class CopyTradingManager {
 ### For Users
 
 1. **Setup**
-   - Login to Global Trades
+   - Login to Zeus Trading Hub
    - Navigate to Copy Trading tab
    - Add follower account tokens
 

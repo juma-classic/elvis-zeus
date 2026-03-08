@@ -1,8 +1,8 @@
 {
-    "name": "Global Trades",
-    "short_name": "Global Trades",
+    "name": "Zeus Trading Hub",
+    "short_name": "Zeus Trading Hub",
     "theme_color": "#14b8a6",
-    "description": "Professional automated trading platform - Reliable trading tools by Global Trades.",
+    "description": "Professional automated trading platform - Reliable trading tools by Zeus Trading Hub.",
     "background_color": "#0f1419",
     "display": "standalone",
     "start_url": "/",

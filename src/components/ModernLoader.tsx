@@ -23,7 +23,7 @@ const ModernLoader: React.FC<ModernLoaderProps> = ({ onFinish }) => {
         'Navigate markets with confidence',
         'Fast execution, reliable returns',
         'Growing your portfolio steadily',
-        'Global Trades - Your path to financial freedom',
+        'Zeus Trading Hub - Your path to financial freedom',
         'Elevate your trading experience',
     ];
 
@@ -244,7 +244,7 @@ const ModernLoader: React.FC<ModernLoaderProps> = ({ onFinish }) => {
             { duration: 900, text: 'Activating Trading Signals', progress: 70 },
             { duration: 700, text: 'Loading Strategies', progress: 85 },
             { duration: 600, text: 'Preparing Dashboard', progress: 95 },
-            { duration: 500, text: 'Welcome to Global Trades', progress: 100 },
+            { duration: 500, text: 'Welcome to Zeus Trading Hub', progress: 100 },
         ];
 
         let currentPhase = 0;
@@ -322,7 +322,7 @@ const ModernLoader: React.FC<ModernLoaderProps> = ({ onFinish }) => {
 
             {/* Main content */}
             <div className='zeus-loader__content'>
-                {/* Global Trades Logo - Animated Globe */}
+                {/* Zeus Trading Hub Logo - Animated Globe */}
                 <div className='zeus-loader__logo-container'>
                     <svg 
                         className='zeus-loader__logo globe-logo'
