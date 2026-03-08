@@ -27,7 +27,7 @@ const ModernLoader: React.FC<ModernLoaderProps> = ({ onFinish }) => {
         'Elevate your trading experience',
     ];
 
-    // Trading-themed background animation
+    // Lightning-themed background animation with blue tech lines
     useEffect(() => {
         const canvas = canvasRef.current;
         if (!canvas) return;
@@ -41,184 +41,228 @@ const ModernLoader: React.FC<ModernLoaderProps> = ({ onFinish }) => {
         // Detect mobile device
         const isMobile = window.innerWidth <= 768;
         
-        // Adjust sizes and counts for mobile
-        const currencyCount = isMobile ? 15 : 25;
-        const currencySizeMin = isMobile ? 12 : 20;
-        const currencySizeMax = isMobile ? 20 : 30;
-        const arrowCount = isMobile ? 8 : 15;
-        const arrowSize = isMobile ? 0.6 : 1;
-        const chartLineCount = isMobile ? 5 : 8;
-
-        // Currency symbols floating upward
-        const currencies: Array<{
+        // Blue tech lines moving from right to left
+        const techLineCount = isMobile ? 15 : 30;
+        const techLines: Array<{
             x: number;
             y: number;
-            symbol: string;
+            length: number;
             speed: number;
             opacity: number;
+            thickness: number;
+            color: string;
+        }> = [];
+
+        const blueShades = ['#00BFFF', '#1E90FF', '#4169E1', '#0080FF', '#00CED1', '#5F9EA0'];
+        
+        for (let i = 0; i < techLineCount; i++) {
+            techLines.push({
+                x: Math.random() * canvas.width + canvas.width,
+                y: Math.random() * canvas.height,
+                length: Math.random() * 150 + 50,
+                speed: Math.random() * 3 + 2,
+                opacity: Math.random() * 0.6 + 0.3,
+                thickness: Math.random() * 2 + 1,
+                color: blueShades[Math.floor(Math.random() * blueShades.length)],
+            });
+        }
+
+        // Lightning bolts
+        const lightningBolts: Array<{
+            x: number;
+            y: number;
+            segments: Array<{ x: number; y: number }>;
+            opacity: number;
+            lifetime: number;
+        }> = [];
+
+        // Electric particles
+        const particles: Array<{
+            x: number;
+            y: number;
+            vx: number;
+            vy: number;
             size: number;
-            rotation: number;
-            rotationSpeed: number;
-        }> = [];
-
-        const currencySymbols = ['$', '€', '£', '¥', '₿', '₹', '₽', 'Ƀ'];
-        for (let i = 0; i < currencyCount; i++) {
-            currencies.push({
-                x: Math.random() * canvas.width,
-                y: Math.random() * canvas.height,
-                symbol: currencySymbols[Math.floor(Math.random() * currencySymbols.length)],
-                speed: Math.random() * 0.8 + 0.3,
-                opacity: Math.random() * 0.4 + 0.1,
-                size: Math.random() * (currencySizeMax - currencySizeMin) + currencySizeMin,
-                rotation: Math.random() * Math.PI * 2,
-                rotationSpeed: (Math.random() - 0.5) * 0.02,
-            });
-        }
-
-        // Rising profit arrows
-        const arrows: Array<{
-            x: number;
-            y: number;
-            speed: number;
             opacity: number;
             color: string;
         }> = [];
 
-        for (let i = 0; i < arrowCount; i++) {
-            arrows.push({
+        const particleCount = isMobile ? 30 : 60;
+        for (let i = 0; i < particleCount; i++) {
+            particles.push({
                 x: Math.random() * canvas.width,
                 y: Math.random() * canvas.height,
-                speed: Math.random() * 1.2 + 0.5,
+                vx: (Math.random() - 0.5) * 2,
+                vy: (Math.random() - 0.5) * 2,
+                size: Math.random() * 3 + 1,
                 opacity: Math.random() * 0.5 + 0.2,
-                color: '#00FF88',
+                color: blueShades[Math.floor(Math.random() * blueShades.length)],
             });
         }
 
-        // Animated chart lines
-        const chartLines: Array<{
-            points: Array<{ x: number; y: number }>;
-            speed: number;
-            opacity: number;
-            color: string;
-        }> = [];
-
-        for (let i = 0; i < chartLineCount; i++) {
-            const points = [];
-            const startY = Math.random() * canvas.height;
-            for (let j = 0; j < 10; j++) {
-                points.push({
-                    x: (canvas.width / 10) * j,
-                    y: startY + (Math.random() - 0.5) * 100,
-                });
-            }
-            chartLines.push({
-                points,
-                speed: Math.random() * 0.3 + 0.1,
-                opacity: Math.random() * 0.2 + 0.05,
-                color: Math.random() > 0.5 ? '#00BFFF' : '#FFD700',
-            });
-        }
+        // Grid lines for tech effect
+        const gridSpacing = isMobile ? 50 : 40;
+        const gridOpacity = 0.1;
 
         const draw = () => {
-            // Dark gradient background
+            // Dark blue gradient background
             const bgGradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
-            bgGradient.addColorStop(0, 'rgba(10, 14, 39, 0.95)');
-            bgGradient.addColorStop(0.5, 'rgba(15, 20, 25, 0.95)');
-            bgGradient.addColorStop(1, 'rgba(20, 10, 20, 0.95)');
+            bgGradient.addColorStop(0, 'rgba(5, 10, 30, 0.98)');
+            bgGradient.addColorStop(0.5, 'rgba(10, 15, 40, 0.98)');
+            bgGradient.addColorStop(1, 'rgba(15, 20, 50, 0.98)');
             ctx.fillStyle = bgGradient;
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-            // Draw animated chart lines
-            chartLines.forEach(line => {
+            // Draw tech grid
+            ctx.globalAlpha = gridOpacity;
+            ctx.strokeStyle = '#00BFFF';
+            ctx.lineWidth = 0.5;
+
+            // Vertical grid lines
+            for (let x = 0; x < canvas.width; x += gridSpacing) {
+                ctx.beginPath();
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, canvas.height);
+                ctx.stroke();
+            }
+
+            // Horizontal grid lines
+            for (let y = 0; y < canvas.height; y += gridSpacing) {
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(canvas.width, y);
+                ctx.stroke();
+            }
+
+            ctx.globalAlpha = 1;
+
+            // Draw blue tech lines moving from right to left
+            techLines.forEach(line => {
                 ctx.globalAlpha = line.opacity;
                 ctx.strokeStyle = line.color;
-                ctx.lineWidth = isMobile ? 1.5 : 2;
-                ctx.shadowBlur = isMobile ? 6 : 10;
+                ctx.lineWidth = line.thickness;
+                ctx.shadowBlur = 15;
                 ctx.shadowColor = line.color;
 
+                // Draw horizontal line
                 ctx.beginPath();
-                line.points.forEach((point, index) => {
-                    if (index === 0) {
-                        ctx.moveTo(point.x, point.y);
-                    } else {
-                        ctx.lineTo(point.x, point.y);
-                    }
-                });
+                ctx.moveTo(line.x, line.y);
+                ctx.lineTo(line.x - line.length, line.y);
                 ctx.stroke();
 
-                // Move line points
-                line.points.forEach(point => {
-                    point.x -= line.speed;
-                    if (point.x < -50) {
-                        point.x = canvas.width + 50;
-                        point.y = Math.random() * canvas.height;
-                    }
-                });
-            });
+                // Draw arrow head at the front
+                const arrowSize = 5;
+                ctx.fillStyle = line.color;
+                ctx.beginPath();
+                ctx.moveTo(line.x - line.length, line.y);
+                ctx.lineTo(line.x - line.length + arrowSize, line.y - arrowSize);
+                ctx.lineTo(line.x - line.length + arrowSize, line.y + arrowSize);
+                ctx.closePath();
+                ctx.fill();
 
-            ctx.shadowBlur = 0;
+                // Move line from right to left
+                line.x -= line.speed;
 
-            // Draw currency symbols
-            currencies.forEach(currency => {
-                ctx.globalAlpha = currency.opacity;
-                ctx.fillStyle = '#FFD700';
-                ctx.font = `${currency.size}px Arial`;
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'middle';
-
-                ctx.save();
-                ctx.translate(currency.x, currency.y);
-                ctx.rotate(currency.rotation);
-                ctx.shadowBlur = isMobile ? 10 : 15;
-                ctx.shadowColor = '#FFD700';
-                ctx.fillText(currency.symbol, 0, 0);
-                ctx.restore();
-
-                // Move currency upward
-                currency.y -= currency.speed;
-                currency.rotation += currency.rotationSpeed;
-
-                if (currency.y < -50) {
-                    currency.y = canvas.height + 50;
-                    currency.x = Math.random() * canvas.width;
-                    currency.symbol = currencySymbols[Math.floor(Math.random() * currencySymbols.length)];
+                // Reset when off screen
+                if (line.x - line.length < 0) {
+                    line.x = canvas.width + line.length;
+                    line.y = Math.random() * canvas.height;
+                    line.color = blueShades[Math.floor(Math.random() * blueShades.length)];
                 }
             });
 
             ctx.shadowBlur = 0;
 
-            // Draw profit arrows
-            arrows.forEach(arrow => {
-                ctx.globalAlpha = arrow.opacity;
-                ctx.strokeStyle = arrow.color;
-                ctx.fillStyle = arrow.color;
-                ctx.lineWidth = isMobile ? 2 : 3;
-                ctx.shadowBlur = isMobile ? 10 : 15;
-                ctx.shadowColor = arrow.color;
+            // Draw electric particles
+            particles.forEach(particle => {
+                ctx.globalAlpha = particle.opacity;
+                ctx.fillStyle = particle.color;
+                ctx.shadowBlur = 10;
+                ctx.shadowColor = particle.color;
 
-                // Arrow shaft (scaled for mobile)
-                const shaftLength = 20 * arrowSize;
                 ctx.beginPath();
-                ctx.moveTo(arrow.x, arrow.y + shaftLength);
-                ctx.lineTo(arrow.x, arrow.y - shaftLength);
-                ctx.stroke();
-
-                // Arrow head (scaled for mobile)
-                const headWidth = 8 * arrowSize;
-                const headHeight = 10 * arrowSize;
-                ctx.beginPath();
-                ctx.moveTo(arrow.x, arrow.y - shaftLength);
-                ctx.lineTo(arrow.x - headWidth, arrow.y - shaftLength + headHeight);
-                ctx.lineTo(arrow.x + headWidth, arrow.y - shaftLength + headHeight);
-                ctx.closePath();
+                ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
                 ctx.fill();
 
-                // Move arrow upward
-                arrow.y -= arrow.speed;
+                // Move particles
+                particle.x += particle.vx;
+                particle.y += particle.vy;
 
-                if (arrow.y < -50) {
-                    arrow.y = canvas.height + 50;
-                    arrow.x = Math.random() * canvas.width;
+                // Bounce off edges
+                if (particle.x < 0 || particle.x > canvas.width) particle.vx *= -1;
+                if (particle.y < 0 || particle.y > canvas.height) particle.vy *= -1;
+
+                // Keep particles in bounds
+                particle.x = Math.max(0, Math.min(canvas.width, particle.x));
+                particle.y = Math.max(0, Math.min(canvas.height, particle.y));
+            });
+
+            ctx.shadowBlur = 0;
+
+            // Randomly spawn lightning bolts
+            if (Math.random() < 0.02) {
+                const startX = Math.random() * canvas.width;
+                const startY = 0;
+                const segments: Array<{ x: number; y: number }> = [{ x: startX, y: startY }];
+                
+                let currentX = startX;
+                let currentY = startY;
+                const segmentCount = 8 + Math.floor(Math.random() * 5);
+
+                for (let i = 0; i < segmentCount; i++) {
+                    currentX += (Math.random() - 0.5) * 60;
+                    currentY += canvas.height / segmentCount + Math.random() * 20;
+                    segments.push({ x: currentX, y: currentY });
+                }
+
+                lightningBolts.push({
+                    x: startX,
+                    y: startY,
+                    segments,
+                    opacity: 1,
+                    lifetime: 15,
+                });
+            }
+
+            // Draw and update lightning bolts
+            lightningBolts.forEach((bolt, index) => {
+                ctx.globalAlpha = bolt.opacity;
+                ctx.strokeStyle = '#FFFFFF';
+                ctx.lineWidth = 3;
+                ctx.shadowBlur = 20;
+                ctx.shadowColor = '#00BFFF';
+
+                ctx.beginPath();
+                bolt.segments.forEach((segment, i) => {
+                    if (i === 0) {
+                        ctx.moveTo(segment.x, segment.y);
+                    } else {
+                        ctx.lineTo(segment.x, segment.y);
+                    }
+                });
+                ctx.stroke();
+
+                // Draw glow
+                ctx.lineWidth = 6;
+                ctx.globalAlpha = bolt.opacity * 0.3;
+                ctx.strokeStyle = '#00BFFF';
+                ctx.beginPath();
+                bolt.segments.forEach((segment, i) => {
+                    if (i === 0) {
+                        ctx.moveTo(segment.x, segment.y);
+                    } else {
+                        ctx.lineTo(segment.x, segment.y);
+                    }
+                });
+                ctx.stroke();
+
+                // Update lifetime
+                bolt.lifetime--;
+                bolt.opacity = bolt.lifetime / 15;
+
+                // Remove dead bolts
+                if (bolt.lifetime <= 0) {
+                    lightningBolts.splice(index, 1);
                 }
             });
 
