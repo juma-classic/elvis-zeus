@@ -41,6 +41,9 @@ import { DCircles } from '@/components/dcircles/DCircles';
 // DTrader Component
 import DTraderIframe from '@/components/dtrader/DTraderIframe';
 
+// Strategy Orchestrator
+import StrategyOrchestrator from '@/pages/strategy-orchestrator/StrategyOrchestrator';
+
 const DashboardIcon = () => (
     <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
         <path d='M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z' fill='currentColor' />
@@ -323,6 +326,38 @@ const PremiumBotsIcon = () => (
         <circle cx='12' cy='14' r='1' fill='#ff0000' opacity='0.8' />
         <circle cx='9' cy='16' r='0.8' fill='#00ff00' opacity='0.8' />
         <circle cx='15' cy='16' r='0.8' fill='#0000ff' opacity='0.8' />
+    </svg>
+);
+
+const StrategyOrchestratorIcon = () => (
+    <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
+        {/* Conductor's baton */}
+        <path
+            d='M4 20L20 4'
+            stroke='#00BFFF'
+            strokeWidth='2'
+            strokeLinecap='round'
+        />
+        <circle cx='20' cy='4' r='2' fill='#00BFFF' />
+        
+        {/* Musical notes representing strategies */}
+        <circle cx='8' cy='8' r='1.5' fill='#10b981' />
+        <path d='M8 8V4' stroke='#10b981' strokeWidth='1.5' />
+        
+        <circle cx='12' cy='12' r='1.5' fill='#8b5cf6' />
+        <path d='M12 12V8' stroke='#8b5cf6' strokeWidth='1.5' />
+        
+        <circle cx='16' cy='16' r='1.5' fill='#f59e0b' />
+        <path d='M16 16V12' stroke='#f59e0b' strokeWidth='1.5' />
+        
+        {/* Connection lines showing orchestration */}
+        <path
+            d='M8 8L12 12L16 16'
+            stroke='#00BFFF'
+            strokeWidth='1'
+            strokeDasharray='2 2'
+            opacity='0.5'
+        />
     </svg>
 );
 
@@ -3333,6 +3368,19 @@ const AppWrapper = observer(() => {
                             </style>
                                 </div>
                             </div>
+                        </div>
+
+                        {/* STRATEGY ORCHESTRATOR TAB */}
+                        <div
+                            label={
+                                <>
+                                    <StrategyOrchestratorIcon />
+                                    <Localize i18n_default_text='Strategy Orchestrator' />
+                                </>
+                            }
+                            id='id-strategy-orchestrator'
+                        >
+                            <StrategyOrchestrator />
                         </div>
 
                         {/* PREMIUM BOTS TAB - Only visible for whitelisted users */}
