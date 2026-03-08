@@ -582,6 +582,7 @@ const AppWrapper = observer(() => {
         const fetchBots = async () => {
             const botFiles = [
                 'PATEL (with Entry).xml',
+                'Auto differ recovery over under.xml',
                 'dollar_flipper.xml',
                 'UnderoverAutoswitch.xml',
                 '_Over 1 under 8 Recovery Even & Odd 2026 💵💯 (5).xml',
