@@ -2,16 +2,30 @@ import React, { useState, useEffect } from 'react';
 import { strategyOrchestrator, Strategy, Signal, OrchestratorState } from '@/services/strategy-orchestrator.service';
 import './StrategyOrchestrator.scss';
 
+const VOLATILITY_SYMBOLS = [
+    'R_10', 'R_25', 'R_50', 'R_75', 'R_100',
+    '1HZ10V', '1HZ25V', '1HZ50V', '1HZ75V', '1HZ100V',
+    '1HZ150V', '1HZ200V', '1HZ300V'
+];
+
 const StrategyOrchestrator: React.FC = () => {
     const [strategies, setStrategies] = useState<Strategy[]>([]);
     const [orchestratorState, setOrchestratorState] = useState<OrchestratorState | null>(null);
     const [recentSignals, setRecentSignals] = useState<Signal[]>([]);
     const [selectedStrategy, setSelectedStrategy] = useState<Strategy | null>(null);
     const [performanceSummary, setPerformanceSummary] = useState<any>(null);
+    
+    // Market Analyzer state
+    const [analyzerStatus, setAnalyzerStatus] = useState<any>(null);
+    const [currentPrice, setCurrentPrice] = useState<string>('');
+    const [selectedSymbol, setSelectedSymbol] = useState<string>('R_10');
+    const [tickCount, setTickCount] = useState<number>(120);
+    const [barrier, setBarrier] = useState<number>(5);
 
     useEffect(() => {
         // Load initial data
         loadData();
+        loadAnalyzerStatus();
 
         // Set up event listeners
         strategyOrchestrator.on('strategy:activated', loadData);
@@ -22,6 +36,11 @@ const StrategyOrchestrator: React.FC = () => {
         strategyOrchestrator.on('signal:added', handleSignalAdded);
         strategyOrchestrator.on('orchestrator:started', loadData);
         strategyOrchestrator.on('orchestrator:stopped', loadData);
+        strategyOrchestrator.on('analyzer:status', handleAnalyzerStatus);
+        strategyOrchestrator.on('analyzer:price', handlePriceUpdate);
+
+        // Poll analyzer status
+        const statusInterval = setInterval(loadAnalyzerStatus, 2000);
 
         return () => {
             // Cleanup listeners
@@ -33,6 +52,9 @@ const StrategyOrchestrator: React.FC = () => {
             strategyOrchestrator.off('signal:added', handleSignalAdded);
             strategyOrchestrator.off('orchestrator:started', loadData);
             strategyOrchestrator.off('orchestrator:stopped', loadData);
+            strategyOrchestrator.off('analyzer:status', handleAnalyzerStatus);
+            strategyOrchestrator.off('analyzer:price', handlePriceUpdate);
+            clearInterval(statusInterval);
         };
     }, []);
 
@@ -42,8 +64,36 @@ const StrategyOrchestrator: React.FC = () => {
         setPerformanceSummary(strategyOrchestrator.getPerformanceSummary());
     };
 
+    const loadAnalyzerStatus = () => {
+        const status = strategyOrchestrator.getAnalyzerStatus();
+        setAnalyzerStatus(status);
+    };
+
     const handleSignalAdded = (signal: Signal) => {
         setRecentSignals(prev => [signal, ...prev].slice(0, 10));
+    };
+
+    const handleAnalyzerStatus = (status: any) => {
+        setAnalyzerStatus(status);
+    };
+
+    const handlePriceUpdate = (data: any) => {
+        setCurrentPrice(data.price);
+    };
+
+    const handleSymbolChange = (symbol: string) => {
+        setSelectedSymbol(symbol);
+        strategyOrchestrator.updateAnalyzerSymbol(symbol);
+    };
+
+    const handleTickCountChange = (count: number) => {
+        setTickCount(count);
+        strategyOrchestrator.updateAnalyzerTickCount(count);
+    };
+
+    const handleBarrierChange = (newBarrier: number) => {
+        setBarrier(newBarrier);
+        strategyOrchestrator.updateAnalyzerBarrier(newBarrier);
     };
 
     const handleStartOrchestrator = () => {
@@ -171,6 +221,93 @@ const StrategyOrchestrator: React.FC = () => {
                     </div>
                 </div>
             )}
+
+            {/* Market Analyzer Section */}
+            <div className='market-analyzer-section'>
+                <div className='section-header'>
+                    <h2 className='section-title'>
+                        <span className='title-icon'>📡</span>
+                        Market Analyzer
+                    </h2>
+                    <div className='analyzer-status'>
+                        {analyzerStatus?.connected ? (
+                            <span className='status-indicator connected'>
+                                <span className='status-dot'></span>
+                                Connected
+                            </span>
+                        ) : (
+                            <span className='status-indicator disconnected'>
+                                <span className='status-dot'></span>
+                                Disconnected
+                            </span>
+                        )}
+                    </div>
+                </div>
+
+                <div className='analyzer-controls'>
+                    <div className='control-group'>
+                        <label className='control-label'>Symbol</label>
+                        <select 
+                            className='control-select'
+                            value={selectedSymbol}
+                            onChange={(e) => handleSymbolChange(e.target.value)}
+                        >
+                            {VOLATILITY_SYMBOLS.map(symbol => (
+                                <option key={symbol} value={symbol}>{symbol}</option>
+                            ))}
+                        </select>
+                    </div>
+
+                    <div className='control-group'>
+                        <label className='control-label'>Tick Count</label>
+                        <select 
+                            className='control-select'
+                            value={tickCount}
+                            onChange={(e) => handleTickCountChange(Number(e.target.value))}
+                        >
+                            <option value={55}>55 ticks</option>
+                            <option value={120}>120 ticks</option>
+                            <option value={255}>255 ticks</option>
+                        </select>
+                    </div>
+
+                    <div className='control-group'>
+                        <label className='control-label'>Over/Under Barrier</label>
+                        <select 
+                            className='control-select'
+                            value={barrier}
+                            onChange={(e) => handleBarrierChange(Number(e.target.value))}
+                        >
+                            {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map(num => (
+                                <option key={num} value={num}>{num}</option>
+                            ))}
+                        </select>
+                    </div>
+
+                    <div className='control-group'>
+                        <label className='control-label'>Current Price</label>
+                        <div className='price-display'>
+                            {currentPrice || analyzerStatus?.symbol || '--'}
+                        </div>
+                    </div>
+
+                    <div className='control-group'>
+                        <label className='control-label'>Ticks Collected</label>
+                        <div className='ticks-display'>
+                            {analyzerStatus?.ticksCollected || 0} / {analyzerStatus?.tickCount || 0}
+                        </div>
+                    </div>
+                </div>
+
+                <div className='analyzer-info'>
+                    <div className='info-item'>
+                        <span className='info-icon'>ℹ️</span>
+                        <span className='info-text'>
+                            The market analyzer continuously monitors tick data and generates trading signals based on real-time analysis.
+                        </span>
+                    </div>
+                </div>
+            </div>
 
             {/* Main Content */}
             <div className='orchestrator-content'>

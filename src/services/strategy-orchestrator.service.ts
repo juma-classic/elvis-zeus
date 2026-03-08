@@ -3,11 +3,15 @@
  * 
  * Coordinates multiple trading strategies, signals, and execution across the platform.
  * Acts as the central intelligence hub for smart trading decisions.
+ * 
+ * Includes integrated market analyzer for real-time signal generation.
  */
+
+import { marketAnalyzer, AnalysisResult } from './market-analyzer.service';
 
 export interface Signal {
     id: string;
-    source: 'zeus-analysis' | 'advanced-algo' | 'patel-signals' | 'signal-savvy' | 'digit-hacker' | 'track-signals';
+    source: 'zeus-analysis' | 'advanced-algo' | 'patel-signals' | 'signal-savvy' | 'digit-hacker' | 'track-signals' | 'market-analyzer';
     symbol: string;
     prediction: 'RISE' | 'FALL' | 'EVEN' | 'ODD' | 'OVER' | 'UNDER' | 'MATCHES' | 'DIFFERS';
     confidence: number;
@@ -70,6 +74,41 @@ class StrategyOrchestratorService {
     constructor() {
         this.initializeDefaultStrategies();
         this.loadStateFromStorage();
+        this.initializeMarketAnalyzer();
+    }
+
+    /**
+     * Initialize market analyzer integration
+     */
+    private initializeMarketAnalyzer(): void {
+        // Listen to market analyzer signals
+        marketAnalyzer.on('analysis', (result: AnalysisResult) => {
+            if (result.recommendation) {
+                const signal: Signal = {
+                    id: `ma-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+                    source: 'market-analyzer',
+                    symbol: marketAnalyzer.getStatus().symbol,
+                    prediction: result.recommendation as any,
+                    confidence: result.confidence,
+                    timestamp: result.timestamp,
+                    metadata: result.data,
+                };
+                this.addSignal(signal);
+            }
+        });
+
+        // Listen to connection status
+        marketAnalyzer.on('connection-status', (status: any) => {
+            console.log('📡 Market Analyzer:', status.status);
+            this.emit('analyzer:status', status);
+        });
+
+        // Listen to price updates
+        marketAnalyzer.on('price-update', (data: any) => {
+            this.emit('analyzer:price', data);
+        });
+
+        console.log('✅ Market Analyzer integrated with Strategy Orchestrator');
     }
 
     /**
@@ -354,8 +393,11 @@ class StrategyOrchestratorService {
         this.state.isActive = true;
         this.state.lastUpdate = Date.now();
         
+        // Start market analyzer
+        marketAnalyzer.start();
+        
         // Start signal aggregation
-        this.signalAggregationInterval = setInterval(() => {
+        this.signalAggregationInterval = window.setInterval(() => {
             this.aggregateAndProcessSignals();
         }, 5000); // Every 5 seconds
         
@@ -375,6 +417,9 @@ class StrategyOrchestratorService {
         
         this.state.isActive = false;
         this.state.lastUpdate = Date.now();
+        
+        // Stop market analyzer
+        marketAnalyzer.stop();
         
         if (this.signalAggregationInterval) {
             clearInterval(this.signalAggregationInterval);
@@ -604,6 +649,41 @@ class StrategyOrchestratorService {
             bestStrategy,
             worstStrategy,
         };
+    }
+
+    /**
+     * Get market analyzer instance
+     */
+    public getMarketAnalyzer() {
+        return marketAnalyzer;
+    }
+
+    /**
+     * Update market analyzer symbol
+     */
+    public updateAnalyzerSymbol(symbol: string): void {
+        marketAnalyzer.updateSymbol(symbol);
+    }
+
+    /**
+     * Update market analyzer tick count
+     */
+    public updateAnalyzerTickCount(count: number): void {
+        marketAnalyzer.updateTickCount(count);
+    }
+
+    /**
+     * Update market analyzer barrier
+     */
+    public updateAnalyzerBarrier(barrier: number): void {
+        marketAnalyzer.updateBarrier(barrier);
+    }
+
+    /**
+     * Get market analyzer status
+     */
+    public getAnalyzerStatus() {
+        return marketAnalyzer.getStatus();
     }
 }
 
