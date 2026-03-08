@@ -1216,6 +1216,37 @@ const AppWrapper = observer(() => {
         };
     }, [bots, handleBotClick, setActiveTab]);
 
+    // Listen for generic bot file loading events (from Strategy Orchestrator, etc.)
+    useEffect(() => {
+        const handleBotFileLoad = async (event: Event) => {
+            const customEvent = event as CustomEvent;
+            const { botFile, source } = customEvent.detail;
+            console.log('[LOAD] Received bot file load request:', { botFile, source });
+
+            // Find the bot in the bots array
+            const bot = bots.find(b => b.filePath === botFile);
+            if (bot) {
+                console.log('[SUCCESS] Found bot, loading into Bot Builder...');
+
+                // Switch to Bot Builder tab first
+                setActiveTab(DBOT_TABS.BOT_BUILDER);
+
+                // Load the bot directly
+                await handleBotClick(bot);
+
+                console.log('[SUCCESS] Bot loaded successfully');
+            } else {
+                console.error('[ERROR] Bot not found:', botFile);
+                console.log('[INFO] Available bots:', bots.map(b => b.filePath));
+            }
+        };
+
+        window.addEventListener('load.bot.file', handleBotFileLoad);
+        return () => {
+            window.removeEventListener('load.bot.file', handleBotFileLoad);
+        };
+    }, [bots, handleBotClick, setActiveTab]);
+
     // Listen for enhanced PATEL bot loading events from Advanced Algorithm
     useEffect(() => {
         const handleEnhancedPatelBotLoad = async (event: Event) => {

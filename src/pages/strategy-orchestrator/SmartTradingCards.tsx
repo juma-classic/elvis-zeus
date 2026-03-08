@@ -179,6 +179,18 @@ const SmartTradingCards: React.FC = () => {
 
     const toggleOverUnderTrading = async () => {
         if (!overUnderActive) {
+            // Load Raziel Over Under bot
+            console.log('[LOAD] Loading Raziel Over Under bot...');
+            window.dispatchEvent(new CustomEvent('load.bot.file', {
+                detail: { 
+                    botFile: 'Raziel Over Under.xml',
+                    source: 'smart-trading-over-under'
+                }
+            }));
+
+            // Wait a moment for bot to load
+            await new Promise(resolve => setTimeout(resolve, 1000));
+
             // Initialize executor before starting
             const initialized = await smartTradingExecutor.initialize();
             if (!initialized) {
