@@ -54,7 +54,8 @@
 
                 strong {
                     font-size: 1rem;
-                    color: #374151;
+                    color: #1f2937;
+                    font-weight: 700;
                 }
 
                 .barrier-input {
@@ -76,7 +77,8 @@
             .barrier-description {
                 margin: 0;
                 font-size: 0.875rem;
-                color: #6b7280;
+                color: #4b5563;
+                font-weight: 500;
             }
         }
 
@@ -100,8 +102,8 @@
                 .prob-label {
                     min-width: 60px;
                     font-size: 0.875rem;
-                    font-weight: 600;
-                    color: #6b7280;
+                    font-weight: 700;
+                    color: #374151;
                 }
 
                 .prob-bar {
@@ -155,8 +157,8 @@
             .pattern-title {
                 margin: 0 0 1rem 0;
                 font-size: 1rem;
-                font-weight: 600;
-                color: #374151;
+                font-weight: 700;
+                color: #1f2937;
             }
 
             .pattern-display {
@@ -190,16 +192,19 @@
             .pattern-description {
                 margin: 0 0 0.5rem 0;
                 font-size: 0.875rem;
-                color: #6b7280;
+                color: #4b5563;
+                font-weight: 500;
             }
 
             .streak-info {
                 margin: 0;
                 font-size: 0.875rem;
-                color: #374151;
+                color: #1f2937;
+                font-weight: 600;
 
                 strong {
                     color: #7b1fa2;
+                    font-weight: 700;
                 }
             }
         }
@@ -216,7 +221,7 @@
                 margin: 0 0 1rem 0;
                 font-size: 1rem;
                 font-weight: 700;
-                color: #374151;
+                color: #1f2937;
             }
 
             .condition-row {
@@ -232,8 +237,8 @@
 
                 .condition-label {
                     font-size: 0.875rem;
-                    color: #374151;
-                    font-weight: 500;
+                    color: #1f2937;
+                    font-weight: 600;
                 }
 
                 .condition-select {
@@ -241,6 +246,8 @@
                     border: 2px solid #e5e7eb;
                     border-radius: 6px;
                     font-size: 0.875rem;
+                    font-weight: 600;
+                    color: #1f2937;
                     background: white;
                     cursor: pointer;
                     min-width: 120px;
@@ -265,6 +272,8 @@
                     border: 2px solid #e5e7eb;
                     border-radius: 6px;
                     font-size: 0.875rem;
+                    font-weight: 600;
+                    color: #1f2937;
                     width: 80px;
                     text-align: center;
 
@@ -285,8 +294,8 @@
 
                 .condition-unit {
                     font-size: 0.875rem;
-                    color: #6b7280;
-                    font-weight: 600;
+                    color: #374151;
+                    font-weight: 700;
                 }
 
                 .condition-checkbox {
@@ -303,8 +312,8 @@
 
                     span {
                         font-size: 0.875rem;
-                        color: #374151;
-                        font-weight: 500;
+                        color: #1f2937;
+                        font-weight: 600;
                     }
                 }
             }
@@ -327,8 +336,8 @@
 
                 .setting-label {
                     font-size: 0.875rem;
-                    font-weight: 600;
-                    color: #6b7280;
+                    font-weight: 700;
+                    color: #374151;
                 }
 
                 .setting-input {
@@ -337,6 +346,7 @@
                     border-radius: 6px;
                     font-size: 1rem;
                     font-weight: 600;
+                    color: #1f2937;
                     text-align: center;
 
                     &:focus {
