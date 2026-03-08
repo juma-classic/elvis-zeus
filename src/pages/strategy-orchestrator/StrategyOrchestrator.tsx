@@ -1,6 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { strategyOrchestrator, Strategy, Signal, OrchestratorState } from '@/services/strategy-orchestrator.service';
 import SmartTradingCards from './SmartTradingCards';
+import { 
+    GearIcon, 
+    ClockIcon, 
+    CheckIcon, 
+    CrossIcon,
+    ChartIcon,
+    CogwheelIcon,
+    BoltIcon,
+    ArrowUpIcon,
+    ArrowDownIcon,
+    TargetIcon,
+    SpinnerIcon
+} from './MechanicalIcons';
 import './StrategyOrchestrator.scss';
 
 const VOLATILITY_SYMBOLS = [
@@ -139,13 +152,13 @@ const StrategyOrchestrator: React.FC = () => {
 
     const getStrategyTypeIcon = (type: string) => {
         switch (type) {
-            case 'rise-fall': return '📈';
-            case 'even-odd': return '🎲';
-            case 'over-under': return '🎯';
-            case 'matches-differs': return '🔢';
-            case 'accumulator': return '📊';
-            case 'martingale': return '💰';
-            default: return '🤖';
+            case 'rise-fall': return <ArrowUpIcon size={20} />;
+            case 'even-odd': return <TargetIcon size={20} />;
+            case 'over-under': return <TargetIcon size={20} />;
+            case 'matches-differs': return <ChartIcon size={20} />;
+            case 'accumulator': return <ChartIcon size={20} />;
+            case 'martingale': return <CogwheelIcon size={20} />;
+            default: return <GearIcon size={20} />;
         }
     };
 
@@ -155,7 +168,7 @@ const StrategyOrchestrator: React.FC = () => {
             <div className='orchestrator-header'>
                 <div className='header-content'>
                     <h1 className='header-title'>
-                        <span className='title-icon'>🎼</span>
+                        <CogwheelIcon size={32} className='title-icon' />
                         Strategy Orchestrator
                     </h1>
                     <p className='header-subtitle'>
@@ -169,7 +182,7 @@ const StrategyOrchestrator: React.FC = () => {
                             className='control-btn stop-btn'
                             onClick={handleStopOrchestrator}
                         >
-                            <span className='btn-icon'>🛑</span>
+                            <CrossIcon size={18} className='btn-icon' />
                             Stop Orchestrator
                         </button>
                     ) : (
@@ -177,7 +190,7 @@ const StrategyOrchestrator: React.FC = () => {
                             className='control-btn start-btn'
                             onClick={handleStartOrchestrator}
                         >
-                            <span className='btn-icon'>▶️</span>
+                            <BoltIcon size={18} className='btn-icon' />
                             Start Orchestrator
                         </button>
                     )}
@@ -188,7 +201,7 @@ const StrategyOrchestrator: React.FC = () => {
             {performanceSummary && (
                 <div className='performance-summary'>
                     <div className='summary-card'>
-                        <div className='card-icon'>💰</div>
+                        <CogwheelIcon size={24} className='card-icon' />
                         <div className='card-content'>
                             <div className='card-label'>Total Profit</div>
                             <div className={`card-value ${performanceSummary.totalProfit >= 0 ? 'positive' : 'negative'}`}>
@@ -198,7 +211,7 @@ const StrategyOrchestrator: React.FC = () => {
                     </div>
 
                     <div className='summary-card'>
-                        <div className='card-icon'>📊</div>
+                        <ChartIcon size={24} className='card-icon' />
                         <div className='card-content'>
                             <div className='card-label'>Total Trades</div>
                             <div className='card-value'>{performanceSummary.totalTrades}</div>
@@ -206,7 +219,7 @@ const StrategyOrchestrator: React.FC = () => {
                     </div>
 
                     <div className='summary-card'>
-                        <div className='card-icon'>🎯</div>
+                        <TargetIcon size={24} className='card-icon' />
                         <div className='card-content'>
                             <div className='card-label'>Win Rate</div>
                             <div className='card-value'>{performanceSummary.overallWinRate.toFixed(1)}%</div>
@@ -214,7 +227,7 @@ const StrategyOrchestrator: React.FC = () => {
                     </div>
 
                     <div className='summary-card'>
-                        <div className='card-icon'>⚡</div>
+                        <BoltIcon size={24} className='card-icon' />
                         <div className='card-content'>
                             <div className='card-label'>Active Strategies</div>
                             <div className='card-value'>{orchestratorState?.activeStrategies.length || 0}</div>
@@ -227,18 +240,18 @@ const StrategyOrchestrator: React.FC = () => {
             <div className='market-analyzer-section'>
                 <div className='section-header'>
                     <h2 className='section-title'>
-                        <span className='title-icon'>📡</span>
+                        <SpinnerIcon size={24} className='title-icon' />
                         Market Analyzer
                     </h2>
                     <div className='analyzer-status'>
                         {analyzerStatus?.connected ? (
                             <span className='status-indicator connected'>
-                                <span className='status-dot'></span>
+                                <CheckIcon size={16} className='status-icon' />
                                 Connected
                             </span>
                         ) : (
                             <span className='status-indicator disconnected'>
-                                <span className='status-dot'></span>
+                                <CrossIcon size={16} className='status-icon' />
                                 Disconnected
                             </span>
                         )}
@@ -302,7 +315,7 @@ const StrategyOrchestrator: React.FC = () => {
 
                 <div className='analyzer-info'>
                     <div className='info-item'>
-                        <span className='info-icon'>ℹ️</span>
+                        <GearIcon size={18} className='info-icon' />
                         <span className='info-text'>
                             The market analyzer continuously monitors tick data and generates trading signals based on real-time analysis.
                         </span>
@@ -314,7 +327,7 @@ const StrategyOrchestrator: React.FC = () => {
             <div className='smart-trading-section'>
                 <div className='section-header'>
                     <h2 className='section-title'>
-                        <span className='title-icon'>🎯</span>
+                        <TargetIcon size={24} className='title-icon' />
                         Smart Trading
                     </h2>
                 </div>
@@ -327,7 +340,7 @@ const StrategyOrchestrator: React.FC = () => {
                 <div className='strategies-section'>
                     <div className='section-header'>
                         <h2 className='section-title'>
-                            <span className='title-icon'>🤖</span>
+                            <GearIcon size={24} className='title-icon' />
                             Available Strategies
                         </h2>
                         <span className='strategy-count'>{strategies.length} strategies</span>
@@ -463,7 +476,7 @@ const StrategyOrchestrator: React.FC = () => {
                 <div className='signals-section'>
                     <div className='section-header'>
                         <h2 className='section-title'>
-                            <span className='title-icon'>📡</span>
+                            <SpinnerIcon size={24} className='title-icon' />
                             Recent Signals
                         </h2>
                     </div>
@@ -471,7 +484,7 @@ const StrategyOrchestrator: React.FC = () => {
                     <div className='signals-list'>
                         {recentSignals.length === 0 ? (
                             <div className='empty-state'>
-                                <span className='empty-icon'>📭</span>
+                                <ClockIcon size={48} className='empty-icon' />
                                 <p>No signals received yet</p>
                                 <p className='empty-hint'>Signals will appear here when the orchestrator is active</p>
                             </div>
