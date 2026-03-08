@@ -548,8 +548,8 @@ const ModernLoader: React.FC<ModernLoaderProps> = ({ onFinish }) => {
 
                 {/* Brand name */}
                 <h1 className='zeus-loader__brand'>
-                    <span className='zeus-loader__brand-zeus'>Global</span>
-                    <span className='zeus-loader__brand-trading'>Trades</span>
+                    <span className='zeus-loader__brand-zeus'>ZEUS</span>
+                    <span className='zeus-loader__brand-trading'>TRADING HUB</span>
                 </h1>
 
                 <p className='zeus-loader__tagline'>Professional Trading Platform</p>
