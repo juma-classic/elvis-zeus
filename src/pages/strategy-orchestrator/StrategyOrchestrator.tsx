@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { strategyOrchestrator, Strategy, Signal, OrchestratorState } from '@/services/strategy-orchestrator.service';
+import SmartTradingCards from './SmartTradingCards';
 import './StrategyOrchestrator.scss';
 
 const VOLATILITY_SYMBOLS = [
@@ -307,6 +308,17 @@ const StrategyOrchestrator: React.FC = () => {
                         </span>
                     </div>
                 </div>
+            </div>
+
+            {/* Smart Trading Cards */}
+            <div className='smart-trading-section'>
+                <div className='section-header'>
+                    <h2 className='section-title'>
+                        <span className='title-icon'>🎯</span>
+                        Smart Trading
+                    </h2>
+                </div>
+                <SmartTradingCards />
             </div>
 
             {/* Main Content */}
