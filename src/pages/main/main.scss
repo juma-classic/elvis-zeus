@@ -1024,14 +1024,12 @@
     }
 
     50% {
-        border: 1px solid transparent;
+        border: 1px solid var(--brand-red-coral);
     }
 }
 
 .dbot-tour-blink {
-    animation: blink 1.25s infinite;
-    animation: blink 1.25s ease-in infinite;
-    animation: blink 1.25s ease-in infinite;
+    animation: none;
     border-radius: $BORDER-RADIUS * 12.5;
     height: 2.5rem !important;
     width: 2.5rem !important;

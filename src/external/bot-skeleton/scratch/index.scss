@@ -67,8 +67,8 @@ $colour_toolboxSelected: $black;
         }
 
         50% {
-            stroke: #ff0;
-            stroke-width: 8px;
+            stroke: #f00;
+            stroke-width: 5px;
         }
 
         100% {
@@ -103,7 +103,7 @@ $colour_toolboxSelected: $black;
     }
 
     .block--blink > .blocklyPath {
-        animation: blink-effect 1s infinite;
+        animation: none;
     }
 
     .blocklySvg {
