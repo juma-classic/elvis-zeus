@@ -137,18 +137,31 @@ const SmartTradingCards: React.FC = () => {
                 break;
         }
 
+        console.log('[CONDITION] Checking Over/Under conditions:', {
+            probability: prob,
+            threshold: overUnderCondition.threshold,
+            comparison: overUnderCondition.comparison,
+            mainConditionMet,
+            lastNTicksEnabled: overUnderCondition.enabled
+        });
+
         // If main condition is not met, don't proceed
         if (!mainConditionMet) {
+            console.log('[CONDITION] Main probability condition NOT met');
             return;
         }
 
-        // Check optional "last N ticks" condition if enabled
+        console.log('[CONDITION] ✓ Main probability condition MET');
+
+        // Check optional "last N ticks" condition ONLY if enabled
         if (overUnderCondition.enabled) {
+            console.log('[CONDITION] Checking optional "last N ticks" condition...');
+            
             // Get the last N ticks from the result data
             const tickHistory = result.data.tickHistory || [];
             const lastNTicks = tickHistory.slice(-overUnderCondition.lastNTicks);
             
-            console.log('[CONDITION] Checking last N ticks:', {
+            console.log('[CONDITION] Last N ticks data:', {
                 tickHistory: tickHistory.slice(-10), // Show last 10 for context
                 lastNTicks,
                 barrier: overUnderBarrier,
@@ -167,12 +180,18 @@ const SmartTradingCards: React.FC = () => {
 
             // If the "last N ticks" condition is not met, don't proceed
             if (!allMatch) {
-                console.log('[CONDITION] Main condition met, but last N ticks condition not satisfied');
+                console.log('[CONDITION] ✗ Last N ticks condition NOT satisfied');
                 console.log('[CONDITION] Last N ticks details:', lastNTicks.map((tick: any) => {
                     const lastDigit = parseInt(tick.toString().slice(-1));
                     return { tick, lastDigit, barrier: overUnderBarrier, isOver: lastDigit > overUnderBarrier };
                 }));
                 return;
+            }
+            
+            console.log('[CONDITION] ✓ Last N ticks condition MET');
+        } else {
+            console.log('[CONDITION] ⊘ Last N ticks condition DISABLED (skipped)');
+        }
             }
         }
 
