@@ -190,6 +190,15 @@ const MarketProbabilityCard: React.FC<MarketProbabilityCardProps> = ({
 
     const handleAutoStop = () => {
         setAutoMode('auto-stop');
+        
+        // Immediately stop the bot when switching to Auto Stop mode
+        const stopButton = document.getElementById('db-animation__stop-button');
+        if (stopButton && !stopButton.hasAttribute('disabled')) {
+            stopButton.click();
+            setBotRunning(false);
+            console.log('[AUTO STOP] Bot stopped manually via Auto Stop button');
+        }
+        
         // Update localStorage
         const savedState = localStorage.getItem('smart_trading_settings');
         if (savedState) {
