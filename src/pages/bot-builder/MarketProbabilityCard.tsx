@@ -21,6 +21,10 @@ const MarketProbabilityCard: React.FC<MarketProbabilityCardProps> = ({
     const [isMinimized, setIsMinimized] = useState(false);
     const [autoMode, setAutoMode] = useState<'auto-stop' | 'auto-continue' | null>(null);
     const [botRunning, setBotRunning] = useState(false);
+    const [botLoading, setBotLoading] = useState(false);
+    const [autoTradingActive, setAutoTradingActive] = useState(false);
+    const [condition, setCondition] = useState<any>(null);
+    const [barrier, setBarrier] = useState(5);
 
     useEffect(() => {
         // Load saved state from localStorage
@@ -29,6 +33,9 @@ const MarketProbabilityCard: React.FC<MarketProbabilityCardProps> = ({
             try {
                 const parsed = JSON.parse(savedState);
                 setAutoMode(parsed.overUnderAutoMode || null);
+                setAutoTradingActive(parsed.overUnderActive || false);
+                setCondition(parsed.overUnderCondition || null);
+                setBarrier(parsed.overUnderBarrier || 5);
             } catch (error) {
                 console.error('Error loading saved state:', error);
             }
@@ -38,6 +45,11 @@ const MarketProbabilityCard: React.FC<MarketProbabilityCardProps> = ({
             if (result.strategyType === 'over-under') {
                 setOverProb(parseFloat(result.data.overProbability));
                 setUnderProb(parseFloat(result.data.underProbability));
+                
+                // Check trading condition when auto trading is active
+                if (autoTradingActive && condition) {
+                    checkOverUnderCondition(result);
+                }
             } else if (result.strategyType === 'even-odd') {
                 setEvenProb(parseFloat(result.data.evenProbability));
                 setOddProb(parseFloat(result.data.oddProbability));
@@ -53,7 +65,81 @@ const MarketProbabilityCard: React.FC<MarketProbabilityCardProps> = ({
         return () => {
             marketAnalyzer.off('analysis', handleAnalysis);
         };
-    }, []);
+    }, [autoTradingActive, condition]);
+
+    // Check condition logic
+    const checkOverUnderCondition = (result: AnalysisResult) => {
+        if (!condition) return;
+
+        const overProbFromResult = parseFloat(result.data.overProbability);
+        const underProbFromResult = parseFloat(result.data.underProbability);
+        const prob = condition.targetValue === 'Over' ? overProbFromResult : underProbFromResult;
+        
+        // Check main probability condition
+        let mainConditionMet = false;
+        switch (condition.comparison) {
+            case '>':
+                mainConditionMet = prob > condition.threshold;
+                break;
+            case '>=':
+                mainConditionMet = prob >= condition.threshold;
+                break;
+            case '<':
+                mainConditionMet = prob < condition.threshold;
+                break;
+            case '<=':
+                mainConditionMet = prob <= condition.threshold;
+                break;
+            case '=':
+                mainConditionMet = Math.abs(prob - condition.threshold) < 0.1;
+                break;
+        }
+
+        console.log('[BOT BUILDER CARD] Checking conditions:', {
+            probability: prob,
+            threshold: condition.threshold,
+            comparison: condition.comparison,
+            mainConditionMet,
+            autoMode,
+            botRunning,
+            botLoading
+        });
+
+        // Handle condition not met - Auto switch to STOP mode
+        if (!mainConditionMet) {
+            if (botRunning) {
+                console.log('[BOT BUILDER CARD] Conditions not met, stopping bot...');
+                setAutoMode('auto-stop');
+                
+                const stopButton = document.getElementById('db-animation__stop-button');
+                if (stopButton && !stopButton.hasAttribute('disabled')) {
+                    stopButton.click();
+                    setBotRunning(false);
+                    setBotLoading(false);
+                    console.log('[BOT BUILDER CARD] Bot stopped');
+                }
+            }
+            return;
+        }
+
+        // Conditions met - Auto switch to CONTINUE mode and start/resume bot
+        if (!botRunning && !botLoading) {
+            console.log('[BOT BUILDER CARD] Conditions met, starting bot...');
+            setAutoMode('auto-continue');
+            setBotLoading(true);
+            
+            // Click the Run button
+            const runButton = document.getElementById('db-animation__run-button');
+            if (runButton && !runButton.hasAttribute('disabled')) {
+                runButton.click();
+                setBotRunning(true);
+                setBotLoading(false);
+                console.log('[BOT BUILDER CARD] Bot started');
+            } else {
+                setBotLoading(false);
+            }
+        }
+    };
 
     // Monitor bot running state
     useEffect(() => {
@@ -72,6 +158,34 @@ const MarketProbabilityCard: React.FC<MarketProbabilityCardProps> = ({
         checkBotState();
 
         return () => clearInterval(interval);
+    }, []);
+
+    // Listen for localStorage changes from Strategy Orchestrator
+    useEffect(() => {
+        const handleStorageChange = () => {
+            const savedState = localStorage.getItem('smart_trading_settings');
+            if (savedState) {
+                try {
+                    const parsed = JSON.parse(savedState);
+                    setAutoMode(parsed.overUnderAutoMode || null);
+                    setAutoTradingActive(parsed.overUnderActive || false);
+                    setCondition(parsed.overUnderCondition || null);
+                    setBarrier(parsed.overUnderBarrier || 5);
+                } catch (error) {
+                    console.error('Error loading saved state:', error);
+                }
+            }
+        };
+
+        window.addEventListener('storage', handleStorageChange);
+        
+        // Also poll for changes since storage event doesn't fire in same tab
+        const pollInterval = setInterval(handleStorageChange, 1000);
+
+        return () => {
+            window.removeEventListener('storage', handleStorageChange);
+            clearInterval(pollInterval);
+        };
     }, []);
 
     const handleAutoStop = () => {
@@ -101,6 +215,7 @@ const MarketProbabilityCard: React.FC<MarketProbabilityCardProps> = ({
     const handleManualStop = () => {
         setAutoMode(null);
         setBotRunning(false);
+        setAutoTradingActive(false);
         // Update localStorage
         const savedState = localStorage.getItem('smart_trading_settings');
         if (savedState) {
