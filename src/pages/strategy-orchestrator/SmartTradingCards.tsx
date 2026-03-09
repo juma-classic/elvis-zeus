@@ -64,6 +64,8 @@ const SmartTradingCards: React.FC = () => {
         }
     );
     const [overUnderActive, setOverUnderActive] = useState(false);
+    const [overUnderAutoMode, setOverUnderAutoMode] = useState<'auto-stop' | 'auto-continue' | null>(null);
+    const [overUnderBotRunning, setOverUnderBotRunning] = useState(false);
 
     // Even/Odd state
     const [evenProb, setEvenProb] = useState(0);
@@ -87,6 +89,7 @@ const SmartTradingCards: React.FC = () => {
         }
     );
     const [evenOddActive, setEvenOddActive] = useState(false);
+    const [evenOddAutoMode, setEvenOddAutoMode] = useState<'auto-stop' | 'auto-continue' | null>(null);
 
     // Recent trades state
     const [recentTrades, setRecentTrades] = useState<TradeHistory[]>([]);
@@ -181,30 +184,35 @@ const SmartTradingCards: React.FC = () => {
             threshold: overUnderCondition.threshold,
             comparison: overUnderCondition.comparison,
             mainConditionMet,
-            lastNTicksEnabled: overUnderCondition.enabled
+            autoMode: overUnderAutoMode
         });
 
-        // If main condition is not met, stop the bot if it's running
+        // Handle condition not met
         if (!mainConditionMet) {
             console.log('[CONDITION] Main probability condition NOT met');
             
-            // Auto-stop bot if conditions fall below threshold
-            const stopButton = document.getElementById('db-animation__stop-button');
-            if (stopButton && !stopButton.hasAttribute('disabled')) {
-                console.log('[AUTO-STOP] Conditions fell below threshold, stopping bot...');
-                stopButton.click();
+            // Only auto-stop if in auto-stop mode
+            if (overUnderAutoMode === 'auto-stop') {
+                const stopButton = document.getElementById('db-animation__stop-button');
+                if (stopButton && !stopButton.hasAttribute('disabled')) {
+                    console.log('[AUTO-STOP] Conditions fell below threshold, pausing bot...');
+                    stopButton.click();
+                    setOverUnderBotRunning(false);
+                }
             }
+            // In auto-continue mode, bot keeps running regardless
             
             return;
         }
 
         console.log('[CONDITION] ✓ Main probability condition MET');
 
-        // All conditions met! Load bot and execute trade
-        console.log('[CONDITION] All Over/Under conditions met! Loading Raziel bot and executing trade...');
-        console.log('[CONDITION] Details:', {
-            probability: prob,
-            threshold: overUnderCondition.threshold,
+        // All conditions met! Load and start bot if not already running
+        if (!overUnderBotRunning) {
+            console.log('[CONDITION] All Over/Under conditions met! Loading Raziel bot and executing trade...');
+            console.log('[CONDITION] Details:', {
+                probability: prob,
+                threshold: overUnderCondition.threshold,
             comparison: overUnderCondition.comparison,
             lastNTicksEnabled: overUnderCondition.enabled,
             lastNTicks: overUnderCondition.lastNTicks,
@@ -289,11 +297,13 @@ const SmartTradingCards: React.FC = () => {
             const runButton = document.getElementById('db-animation__run-button');
             if (runButton) {
                 runButton.click();
+                setOverUnderBotRunning(true);
                 console.log('[SUCCESS] Bot started via Run button');
             } else {
                 console.error('[ERROR] Run button not found');
             }
         }, 2000); // 2 second delay to ensure bot is fully loaded
+        }
     };
 
     const checkEvenOddCondition = (result: AnalysisResult) => {
@@ -352,20 +362,22 @@ const SmartTradingCards: React.FC = () => {
             }
             
             setOverUnderActive(true);
+            setOverUnderAutoMode('auto-stop'); // Default to auto-stop mode
             console.log('[START] Over/Under Auto Trading Started - Waiting for conditions...');
-        } else {
-            // Stopping auto trading
-            setOverUnderActive(false);
-            console.log('[STOP] Over/Under Auto Trading Stopped');
-            
-            // Also stop the bot if it's running
-            const stopButton = document.getElementById('db-animation__stop-button');
-            if (stopButton) {
-                stopButton.click();
-                console.log('[STOP] Bot stopped via Stop button');
-            } else {
-                console.log('[INFO] Bot is not running or Stop button not found');
-            }
+        }
+    };
+
+    const handleOverUnderManualStop = () => {
+        setOverUnderActive(false);
+        setOverUnderAutoMode(null);
+        setOverUnderBotRunning(false);
+        console.log('[MANUAL STOP] Over/Under Auto Trading Stopped');
+        
+        // Stop the bot if it's running
+        const stopButton = document.getElementById('db-animation__stop-button');
+        if (stopButton && !stopButton.hasAttribute('disabled')) {
+            stopButton.click();
+            console.log('[STOP] Bot stopped via Stop button');
         }
     };
 
@@ -527,13 +539,36 @@ const SmartTradingCards: React.FC = () => {
                         </div>
                     </div>
 
-                    {/* Start Button */}
-                    <button
-                        className={`start-trading-btn ${overUnderActive ? 'active' : ''}`}
-                        onClick={toggleOverUnderTrading}
-                    >
-                        {overUnderActive ? 'Stop Auto Trading' : 'Start Auto Trading'}
-                    </button>
+                    {/* Control Buttons */}
+                    {!overUnderActive ? (
+                        <button
+                            className='start-trading-btn'
+                            onClick={toggleOverUnderTrading}
+                        >
+                            Start Auto Trading
+                        </button>
+                    ) : (
+                        <div className='trading-controls'>
+                            <button
+                                className={`control-btn ${overUnderAutoMode === 'auto-stop' ? 'active' : ''}`}
+                                onClick={() => setOverUnderAutoMode('auto-stop')}
+                            >
+                                🔄 Auto Stop
+                            </button>
+                            <button
+                                className={`control-btn ${overUnderAutoMode === 'auto-continue' ? 'active' : ''}`}
+                                onClick={() => setOverUnderAutoMode('auto-continue')}
+                            >
+                                ▶️ Auto Continue
+                            </button>
+                            <button
+                                className='control-btn stop'
+                                onClick={handleOverUnderManualStop}
+                            >
+                                ⏹️ Manual Stop
+                            </button>
+                        </div>
+                    )}
                 </div>
             </div>
 
