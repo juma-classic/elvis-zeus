@@ -109,8 +109,8 @@ const SmartTradingCards: React.FC = () => {
                 setOverProb(parseFloat(result.data.overProbability));
                 setUnderProb(parseFloat(result.data.underProbability));
                 
-                // Check trading condition
-                if (overUnderActive && overUnderCondition.enabled) {
+                // Check trading condition when auto trading is active
+                if (overUnderActive) {
                     checkOverUnderCondition(result);
                 }
             } else if (result.strategyType === 'even-odd') {
@@ -122,8 +122,8 @@ const SmartTradingCards: React.FC = () => {
                     type: result.data.streakType || '',
                 });
                 
-                // Check trading condition
-                if (evenOddActive && evenOddCondition.enabled) {
+                // Check trading condition when auto trading is active
+                if (evenOddActive) {
                     checkEvenOddCondition(result);
                 }
             }
