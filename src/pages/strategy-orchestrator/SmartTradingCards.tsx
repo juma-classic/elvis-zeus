@@ -66,6 +66,7 @@ const SmartTradingCards: React.FC = () => {
     const [overUnderActive, setOverUnderActive] = useState(savedSettings?.overUnderActive ?? false);
     const [overUnderAutoMode, setOverUnderAutoMode] = useState<'auto-stop' | 'auto-continue' | null>(savedSettings?.overUnderAutoMode ?? null);
     const [overUnderBotRunning, setOverUnderBotRunning] = useState(false);
+    const [overUnderBotLoading, setOverUnderBotLoading] = useState(false);
 
     // Even/Odd state
     const [evenProb, setEvenProb] = useState(0);
@@ -206,6 +207,7 @@ const SmartTradingCards: React.FC = () => {
                     console.log('[AUTO-STOP] Conditions fell below threshold, pausing bot...');
                     stopButton.click();
                     setOverUnderBotRunning(false);
+                    setOverUnderBotLoading(false); // Reset loading flag when stopping
                 }
             }
             
@@ -215,9 +217,11 @@ const SmartTradingCards: React.FC = () => {
         console.log('[CONDITION] ✓ Main probability condition MET');
 
         // Conditions met - Auto switch to CONTINUE mode and start/resume bot
-        if (!overUnderBotRunning) {
+        // IMPORTANT: Check both botRunning AND botLoading to prevent multiple loads
+        if (!overUnderBotRunning && !overUnderBotLoading) {
             console.log('[AUTO-SWITCH] Switching to Auto Continue mode');
             setOverUnderAutoMode('auto-continue');
+            setOverUnderBotLoading(true); // Set loading flag immediately to prevent duplicate loads
             
             console.log('[CONDITION] All Over/Under conditions met! Loading Raziel bot and executing trade...');
             console.log('[CONDITION] Details:', {
@@ -248,6 +252,7 @@ const SmartTradingCards: React.FC = () => {
                 const workspace = (window as any).Blockly?.derivWorkspace;
                 if (!workspace) {
                     console.error('[ERROR] Blockly workspace not found');
+                    setOverUnderBotLoading(false); // Reset loading flag on error
                     return;
                 }
 
@@ -293,6 +298,8 @@ const SmartTradingCards: React.FC = () => {
                 console.log('[CONFIG] Bot configuration complete');
             } catch (error) {
                 console.error('[ERROR] Failed to configure bot:', error);
+                setOverUnderBotLoading(false); // Reset loading flag on error
+                return;
             }
 
             // Open the transactions drawer to show trades as they happen
@@ -307,9 +314,11 @@ const SmartTradingCards: React.FC = () => {
             if (runButton) {
                 runButton.click();
                 setOverUnderBotRunning(true);
+                setOverUnderBotLoading(false); // Clear loading flag after successful start
                 console.log('[SUCCESS] Bot started in background - staying on Strategy Orchestrator page');
             } else {
                 console.error('[ERROR] Run button not found');
+                setOverUnderBotLoading(false); // Reset loading flag on error
             }
         }, 2000); // 2 second delay to ensure bot is fully loaded
         }
@@ -380,6 +389,7 @@ const SmartTradingCards: React.FC = () => {
         setOverUnderActive(false);
         setOverUnderAutoMode(null);
         setOverUnderBotRunning(false);
+        setOverUnderBotLoading(false); // Reset loading flag
         console.log('[MANUAL STOP] Over/Under Auto Trading Stopped');
         
         // Stop the bot if it's running
