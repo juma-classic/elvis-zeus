@@ -192,8 +192,6 @@ const SmartTradingCards: React.FC = () => {
         } else {
             console.log('[CONDITION] ⊘ Last N ticks condition DISABLED (skipped)');
         }
-            }
-        }
 
         // All conditions met! Load bot and execute trade
         console.log('[CONDITION] All Over/Under conditions met! Loading Raziel bot and executing trade...');
