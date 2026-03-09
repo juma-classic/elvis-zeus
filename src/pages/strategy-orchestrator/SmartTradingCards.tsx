@@ -295,8 +295,14 @@ const SmartTradingCards: React.FC = () => {
                 console.error('[ERROR] Failed to configure bot:', error);
             }
 
-            // DON'T open the run panel drawer - keep user on Strategy Orchestrator page
-            // Just click the Run button programmatically in the background
+            // Open the transactions drawer to show trades as they happen
+            const rootStore = (window as any).Blockly?.derivWorkspace?.store?.root_store;
+            if (rootStore?.transactions) {
+                rootStore.transactions.toggleDrawer(true);
+                console.log('[SUCCESS] Transactions drawer opened');
+            }
+            
+            // Click the Run button programmatically in the background
             const runButton = document.getElementById('db-animation__run-button');
             if (runButton) {
                 runButton.click();
