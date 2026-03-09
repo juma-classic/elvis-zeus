@@ -200,46 +200,6 @@ const SmartTradingCards: React.FC = () => {
 
         console.log('[CONDITION] ✓ Main probability condition MET');
 
-        // Check optional "last N ticks" condition ONLY if enabled
-        if (overUnderCondition.enabled) {
-            console.log('[CONDITION] Checking optional "last N ticks" condition...');
-            
-            // Get the last N ticks from the result data
-            const tickHistory = result.data.tickHistory || [];
-            const lastNTicks = tickHistory.slice(-overUnderCondition.lastNTicks);
-            
-            console.log('[CONDITION] Last N ticks data:', {
-                tickHistory: tickHistory.slice(-10), // Show last 10 for context
-                lastNTicks,
-                barrier: overUnderBarrier,
-                targetValue: overUnderCondition.targetValue
-            });
-            
-            // Check if all last N ticks match the target (Over or Under)
-            const allMatch = lastNTicks.every((tick: any) => {
-                const lastDigit = parseInt(tick.toString().slice(-1));
-                if (overUnderCondition.targetValue === 'Over') {
-                    return lastDigit > overUnderBarrier;
-                } else {
-                    return lastDigit < overUnderBarrier;
-                }
-            });
-
-            // If the "last N ticks" condition is not met, don't proceed
-            if (!allMatch) {
-                console.log('[CONDITION] ✗ Last N ticks condition NOT satisfied');
-                console.log('[CONDITION] Last N ticks details:', lastNTicks.map((tick: any) => {
-                    const lastDigit = parseInt(tick.toString().slice(-1));
-                    return { tick, lastDigit, barrier: overUnderBarrier, isOver: lastDigit > overUnderBarrier };
-                }));
-                return;
-            }
-            
-            console.log('[CONDITION] ✓ Last N ticks condition MET');
-        } else {
-            console.log('[CONDITION] ⊘ Last N ticks condition DISABLED (skipped)');
-        }
-
         // All conditions met! Load bot and execute trade
         console.log('[CONDITION] All Over/Under conditions met! Loading Raziel bot and executing trade...');
         console.log('[CONDITION] Details:', {
@@ -528,55 +488,6 @@ const SmartTradingCards: React.FC = () => {
                                 onChange={(e) => setOverUnderCondition({ ...overUnderCondition, threshold: parseFloat(e.target.value) })}
                             />
                             <span className='condition-unit'>%</span>
-                        </div>
-
-                        <div className='condition-row'>
-                            <label className='condition-checkbox'>
-                                <input
-                                    type='checkbox'
-                                    checked={overUnderCondition.enabled}
-                                    onChange={(e) => setOverUnderCondition({ ...overUnderCondition, enabled: e.target.checked })}
-                                />
-                                <span>and last</span>
-                            </label>
-                            <input
-                                type='number'
-                                className='condition-input small'
-                                value={overUnderCondition.lastNTicks}
-                                onChange={(e) => setOverUnderCondition({ ...overUnderCondition, lastNTicks: parseInt(e.target.value) })}
-                                disabled={!overUnderCondition.enabled}
-                            />
-                            <span className='condition-label'>ticks</span>
-                        </div>
-
-                        <div className='condition-row'>
-                            <select
-                                className='condition-select'
-                                disabled={!overUnderCondition.enabled}
-                            >
-                                <option value='Over'>Over</option>
-                                <option value='Under'>Under</option>
-                            </select>
-                            <input
-                                type='number'
-                                className='condition-input small'
-                                defaultValue='5'
-                                disabled={!overUnderCondition.enabled}
-                            />
-                        </div>
-
-                        <div className='condition-row'>
-                            <span className='condition-label'>Then</span>
-                            <select className='condition-select'>
-                                <option value='Buy Over'>Buy Over</option>
-                                <option value='Buy Under'>Buy Under</option>
-                            </select>
-                            <span className='condition-label'>digit</span>
-                            <input
-                                type='number'
-                                className='condition-input small'
-                                defaultValue='5'
-                            />
                         </div>
                     </div>
 
