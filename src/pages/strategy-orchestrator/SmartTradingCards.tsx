@@ -184,15 +184,19 @@ const SmartTradingCards: React.FC = () => {
             threshold: overUnderCondition.threshold,
             comparison: overUnderCondition.comparison,
             mainConditionMet,
-            autoMode: overUnderAutoMode
+            autoMode: overUnderAutoMode,
+            botRunning: overUnderBotRunning
         });
 
-        // Handle condition not met
+        // Handle condition not met - Auto switch to STOP mode
         if (!mainConditionMet) {
             console.log('[CONDITION] Main probability condition NOT met');
             
-            // Only auto-stop if in auto-stop mode
-            if (overUnderAutoMode === 'auto-stop') {
+            // Automatically switch to auto-stop mode and stop bot
+            if (overUnderBotRunning) {
+                console.log('[AUTO-SWITCH] Switching to Auto Stop mode');
+                setOverUnderAutoMode('auto-stop');
+                
                 const stopButton = document.getElementById('db-animation__stop-button');
                 if (stopButton && !stopButton.hasAttribute('disabled')) {
                     console.log('[AUTO-STOP] Conditions fell below threshold, pausing bot...');
@@ -200,22 +204,22 @@ const SmartTradingCards: React.FC = () => {
                     setOverUnderBotRunning(false);
                 }
             }
-            // In auto-continue mode, bot keeps running regardless
             
             return;
         }
 
         console.log('[CONDITION] ✓ Main probability condition MET');
 
-        // All conditions met! Load and start bot if not already running
+        // Conditions met - Auto switch to CONTINUE mode and start/resume bot
         if (!overUnderBotRunning) {
+            console.log('[AUTO-SWITCH] Switching to Auto Continue mode');
+            setOverUnderAutoMode('auto-continue');
+            
             console.log('[CONDITION] All Over/Under conditions met! Loading Raziel bot and executing trade...');
             console.log('[CONDITION] Details:', {
                 probability: prob,
                 threshold: overUnderCondition.threshold,
             comparison: overUnderCondition.comparison,
-            lastNTicksEnabled: overUnderCondition.enabled,
-            lastNTicks: overUnderCondition.lastNTicks,
             barrier: overUnderBarrier,
             stake: overUnderSettings.stake,
             symbol: marketAnalyzer.getStatus().symbol
@@ -548,26 +552,47 @@ const SmartTradingCards: React.FC = () => {
                             Start Auto Trading
                         </button>
                     ) : (
-                        <div className='trading-controls'>
-                            <button
-                                className={`control-btn ${overUnderAutoMode === 'auto-stop' ? 'active' : ''}`}
-                                onClick={() => setOverUnderAutoMode('auto-stop')}
-                            >
-                                🔄 Auto Stop
-                            </button>
-                            <button
-                                className={`control-btn ${overUnderAutoMode === 'auto-continue' ? 'active' : ''}`}
-                                onClick={() => setOverUnderAutoMode('auto-continue')}
-                            >
-                                ▶️ Auto Continue
-                            </button>
-                            <button
-                                className='control-btn stop'
-                                onClick={handleOverUnderManualStop}
-                            >
-                                ⏹️ Manual Stop
-                            </button>
-                        </div>
+                        <>
+                            <div className='status-indicator'>
+                                <span className='status-label'>Status:</span>
+                                <span className={`status-value ${overUnderBotRunning ? 'running' : 'paused'}`}>
+                                    {overUnderBotRunning ? '🟢 Bot Running' : '🟡 Bot Paused'}
+                                </span>
+                                <span className='mode-label'>Mode:</span>
+                                <span className='mode-value'>
+                                    {overUnderAutoMode === 'auto-stop' ? '🔄 Auto Stop' : '▶️ Auto Continue'}
+                                </span>
+                            </div>
+                            <div className='trading-controls'>
+                                <button
+                                    className={`control-btn ${overUnderAutoMode === 'auto-stop' ? 'active' : ''}`}
+                                    onClick={() => {
+                                        setOverUnderAutoMode('auto-stop');
+                                        console.log('[MANUAL] Switched to Auto Stop mode');
+                                    }}
+                                    title="Automatically pause when conditions are bad"
+                                >
+                                    🔄 Auto Stop
+                                </button>
+                                <button
+                                    className={`control-btn ${overUnderAutoMode === 'auto-continue' ? 'active' : ''}`}
+                                    onClick={() => {
+                                        setOverUnderAutoMode('auto-continue');
+                                        console.log('[MANUAL] Switched to Auto Continue mode');
+                                    }}
+                                    title="Keep running regardless of conditions"
+                                >
+                                    ▶️ Auto Continue
+                                </button>
+                                <button
+                                    className='control-btn stop'
+                                    onClick={handleOverUnderManualStop}
+                                    title="Stop everything and exit auto trading"
+                                >
+                                    ⏹️ Manual Stop
+                                </button>
+                            </div>
+                        </>
                     )}
                 </div>
             </div>

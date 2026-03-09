@@ -386,6 +386,40 @@
         }
 
         // Trading Controls (3 buttons)
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.75rem 1rem;
+            background: #f9fafb;
+            border-radius: 8px;
+            margin-bottom: 0.75rem;
+            font-size: 0.875rem;
+
+            .status-label,
+            .mode-label {
+                font-weight: 600;
+                color: #6b7280;
+            }
+
+            .status-value {
+                font-weight: 700;
+                
+                &.running {
+                    color: #10b981;
+                }
+                
+                &.paused {
+                    color: #f59e0b;
+                }
+            }
+
+            .mode-value {
+                font-weight: 600;
+                color: #0ea5e9;
+            }
+        }
+
         .trading-controls {
             display: flex;
             gap: 0.75rem;
