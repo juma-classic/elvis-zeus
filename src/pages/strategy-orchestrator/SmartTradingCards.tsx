@@ -229,12 +229,13 @@ const SmartTradingCards: React.FC = () => {
             symbol: marketAnalyzer.getStatus().symbol
         });
         
-        // Load Raziel Over Under bot when ALL conditions are met
+        // Load Raziel Over Under bot in background (without opening Bot Builder page)
         window.dispatchEvent(new CustomEvent('load.bot.file', {
             detail: { 
                 botFile: 'Raziel Over Under.xml',
                 source: 'smart-trading-over-under-condition',
-                autoRun: true  // Auto-run the bot after loading
+                autoRun: true,
+                silent: true  // Don't navigate to Bot Builder page
             }
         }));
 
@@ -294,19 +295,13 @@ const SmartTradingCards: React.FC = () => {
                 console.error('[ERROR] Failed to configure bot:', error);
             }
 
-            // Open the run panel drawer
-            const rootStore = (window as any).Blockly?.derivWorkspace?.store?.root_store;
-            if (rootStore?.run_panel) {
-                rootStore.run_panel.toggleDrawer(true);
-                console.log('[SUCCESS] Run panel drawer opened');
-            }
-            
-            // Click the Run button programmatically
+            // DON'T open the run panel drawer - keep user on Strategy Orchestrator page
+            // Just click the Run button programmatically in the background
             const runButton = document.getElementById('db-animation__run-button');
             if (runButton) {
                 runButton.click();
                 setOverUnderBotRunning(true);
-                console.log('[SUCCESS] Bot started via Run button');
+                console.log('[SUCCESS] Bot started in background - staying on Strategy Orchestrator page');
             } else {
                 console.error('[ERROR] Run button not found');
             }
