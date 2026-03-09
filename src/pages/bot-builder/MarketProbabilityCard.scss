@@ -1,7 +1,8 @@
 .market-probability-card {
     position: fixed;
-    top: 80px;
-    right: 20px;
+    top: 60px;
+    left: 50%;
+    transform: translateX(-50%);
     width: 320px;
     background: #ffffff;
     border-radius: 12px;
@@ -10,7 +11,7 @@
     transition: all 0.3s ease;
 
     &.minimized {
-        width: 200px;
+        width: 280px;
 
         .card-body {
             display: none;
@@ -226,12 +227,12 @@
 // Responsive adjustments
 @media (max-width: 768px) {
     .market-probability-card {
-        top: 60px;
-        right: 10px;
-        width: 280px;
+        top: 50px;
+        width: 90%;
+        max-width: 320px;
 
         &.minimized {
-            width: 180px;
+            width: 200px;
         }
     }
 }
