@@ -537,6 +537,7 @@ class MarketAnalyzerService {
                 last10Digits,
                 overUnderPattern,
                 digitPercentages,
+                tickHistory: this.tickHistory.map(tick => tick.quote), // Include full tick history for condition checking
             },
             timestamp: Date.now(),
         };

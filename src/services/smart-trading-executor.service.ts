@@ -2,10 +2,11 @@
  * Smart Trading Executor Service
  * 
  * Connects Smart Trading Cards to Deriv API for automated trade execution.
+ * Uses the existing api_base connection instead of creating a new one.
  * Handles trade execution, martingale logic, and result tracking.
  */
 
-import { derivAPI, TradeConfig, TradeResult } from '@/utils/deriv-trading-api';
+import { api_base } from '@/external/bot-skeleton/services/api/api-base';
 
 export interface SmartTradeConfig {
     type: 'over-under' | 'even-odd';
@@ -43,27 +44,31 @@ class SmartTradingExecutorService {
 
     /**
      * Initialize connection to Deriv API
+     * Uses existing api_base connection
      */
     public async initialize(): Promise<boolean> {
         try {
             console.log('[INIT] Initializing Smart Trading Executor...');
             
-            // Check if we have auth token
-            const token = derivAPI.getAuthToken();
-            if (!token) {
-                console.warn('[WARN] No auth token found. User needs to login first.');
+            // Check if api_base is already connected and authorized
+            if (!api_base.api) {
+                console.error('[ERROR] api_base.api is not initialized. User needs to be logged in.');
                 this.emit('error', { message: 'Please login to Deriv first' });
                 return false;
             }
 
-            // Connect to Deriv API
-            await derivAPI.connect();
+            // Check if we have an active account
+            const authToken = localStorage.getItem('authToken');
+            const activeLoginId = localStorage.getItem('active_loginid');
             
-            // Authorize
-            const accountInfo = await derivAPI.authorize();
-            console.log('[SUCCESS] Smart Trading Executor initialized:', accountInfo);
-            
-            this.emit('initialized', accountInfo);
+            if (!authToken || !activeLoginId) {
+                console.error('[ERROR] No auth token or login ID found');
+                this.emit('error', { message: 'Please login to Deriv first' });
+                return false;
+            }
+
+            console.log('[SUCCESS] Smart Trading Executor initialized using existing api_base connection');
+            this.emit('initialized', { loginid: activeLoginId });
             return true;
         } catch (error) {
             console.error('[ERROR] Failed to initialize Smart Trading Executor:', error);
@@ -74,215 +79,15 @@ class SmartTradingExecutorService {
 
     /**
      * Execute a smart trade
+     * NOTE: This is a placeholder - actual execution should be done via bot loading
      */
-    public async executeTrade(config: SmartTradeConfig): Promise<TradeResult> {
-        if (this.isExecuting) {
-            console.warn('[WARN] Trade already in progress, skipping...');
-            return { success: false, error: 'Trade already in progress' };
-        }
-
-        this.isExecuting = true;
-
-        try {
-            console.log('[TRADE] Executing smart trade:', config);
-
-            // Check if API is ready
-            if (!derivAPI.isReady()) {
-                const initialized = await this.initialize();
-                if (!initialized) {
-                    throw new Error('Failed to initialize Deriv API');
-                }
-            }
-
-            // Calculate stake with martingale
-            const stake = this.calculateStake(config.settings.stake, config.settings.martingale);
-
-            // Convert prediction to Deriv contract type
-            const tradeConfig = this.convertToTradeConfig(config, stake);
-
-            // Execute trade
-            const result = await derivAPI.executeTrade(tradeConfig);
-
-            // Record trade
-            const tradeRecord: TradeHistory = {
-                id: result.contractId || `trade-${Date.now()}`,
-                timestamp: Date.now(),
-                type: config.type,
-                prediction: config.prediction,
-                stake,
-                result: result.success ? (result.profit! > 0 ? 'win' : 'loss') : 'loss',
-                profit: result.profit || 0,
-                contractId: result.contractId,
-            };
-
-            this.addTradeToHistory(tradeRecord);
-
-            // Update streak
-            if (tradeRecord.result === 'win') {
-                if (this.lastResult === 'win') {
-                    this.currentStreak++;
-                } else {
-                    this.currentStreak = 1;
-                }
-                this.lastResult = 'win';
-            } else {
-                if (this.lastResult === 'loss') {
-                    this.currentStreak++;
-                } else {
-                    this.currentStreak = 1;
-                }
-                this.lastResult = 'loss';
-            }
-
-            // Push to transactions drawer (if available)
-            this.pushToTransactionsDrawer(result, config, stake);
-
-            // Emit trade result
-            this.emit('trade-executed', {
-                trade: tradeRecord,
-                result,
-                streak: this.currentStreak,
-                streakType: this.lastResult,
-            });
-
-            console.log(`[${tradeRecord.result.toUpperCase()}] Trade ${tradeRecord.result}:`, {
-                profit: tradeRecord.profit,
-                streak: this.currentStreak,
-            });
-
-            return result;
-        } catch (error) {
-            console.error('[ERROR] Trade execution failed:', error);
-            
-            const errorResult: TradeResult = {
-                success: false,
-                error: error instanceof Error ? error.message : 'Unknown error',
-            };
-
-            this.emit('trade-error', { error: errorResult.error, config });
-            
-            return errorResult;
-        } finally {
-            this.isExecuting = false;
-        }
-    }
-
-    /**
-     * Push trade to transactions drawer
-     */
-    private pushToTransactionsDrawer(result: TradeResult, config: SmartTradeConfig, stake: number): void {
-        try {
-            // Access the global store (if available)
-            const rootStore = (window as any).Blockly?.derivWorkspace?.store?.root_store;
-            if (!rootStore || !rootStore.transactions) {
-                console.log('[INFO] Transactions store not available');
-                return;
-            }
-
-            // Create contract info object matching the expected format
-            const contractInfo = {
-                contract_id: result.contractId,
-                contract_type: this.getContractTypeDisplay(config.prediction),
-                currency: 'USD',
-                date_start: Math.floor(Date.now() / 1000),
-                buy_price: stake,
-                payout: result.payout || 0,
-                bid_price: result.payout || 0,
-                profit: result.profit || 0,
-                is_completed: true,
-                transaction_ids: {
-                    buy: parseInt(result.contractId || Date.now().toString()),
-                },
-                underlying: config.symbol || 'R_100',
-                entry_tick_display_value: '-',
-                exit_tick_display_value: '-',
-                entry_tick_time: Math.floor(Date.now() / 1000),
-                exit_tick_time: Math.floor(Date.now() / 1000),
-            };
-
-            // Push to transactions
-            rootStore.transactions.pushTransaction(contractInfo);
-            console.log('[SUCCESS] Trade added to transactions drawer');
-        } catch (error) {
-            console.error('[ERROR] Failed to push to transactions drawer:', error);
-        }
-    }
-
-    /**
-     * Get display name for contract type
-     */
-    private getContractTypeDisplay(prediction: string): string {
-        const typeMap: Record<string, string> = {
-            'EVEN': 'Even',
-            'ODD': 'Odd',
-            'OVER': 'Over',
-            'UNDER': 'Under',
-        };
-        return typeMap[prediction] || prediction;
-    }
-
-    /**
-     * Calculate stake with martingale
-     */
-    private calculateStake(baseStake: number, martingaleMultiplier: number): number {
-        if (this.lastResult === 'loss' && this.currentStreak > 0) {
-            // Apply martingale: stake * (multiplier ^ streak)
-            return baseStake * Math.pow(martingaleMultiplier, this.currentStreak);
-        }
-        return baseStake;
-    }
-
-    /**
-     * Convert smart trade config to Deriv trade config
-     */
-    private convertToTradeConfig(config: SmartTradeConfig, stake: number): TradeConfig {
-        const symbol = config.symbol || 'R_100';
-        const duration = config.settings.ticks;
-
-        let tradeType: TradeConfig['tradeType'];
-        let prediction: number | undefined;
-
-        switch (config.prediction) {
-            case 'EVEN':
-                tradeType = 'DIGITEVEN';
-                break;
-            case 'ODD':
-                tradeType = 'DIGITODD';
-                break;
-            case 'OVER':
-                tradeType = 'DIGITOVER';
-                prediction = 5; // Default barrier
-                break;
-            case 'UNDER':
-                tradeType = 'DIGITUNDER';
-                prediction = 5; // Default barrier
-                break;
-            default:
-                throw new Error(`Unknown prediction type: ${config.prediction}`);
-        }
-
-        return {
-            market: symbol,
-            tradeType,
-            stake,
-            duration,
-            durationType: 't',
-            prediction,
-        };
-    }
-
-    /**
-     * Add trade to history
-     */
-    private addTradeToHistory(trade: TradeHistory): void {
-        this.tradeHistory.unshift(trade);
+    public async executeTrade(config: SmartTradeConfig): Promise<{ success: boolean; error?: string }> {
+        console.log('[INFO] Smart Trading uses bot loading for execution, not direct API calls');
+        console.log('[CONFIG]', config);
         
-        // Keep only last 100 trades
-        if (this.tradeHistory.length > 100) {
-            this.tradeHistory = this.tradeHistory.slice(0, 100);
-        }
-
-        this.saveHistoryToStorage();
+        // For now, just return success
+        // The actual execution happens when conditions are met and bot is loaded
+        return { success: true };
     }
 
     /**
@@ -397,25 +202,6 @@ class SmartTradingExecutorService {
                     console.error(`Error in ${event} callback:`, error);
                 }
             });
-        }
-    }
-
-    /**
-     * Check if executor is ready
-     */
-    public isReady(): boolean {
-        return derivAPI.isReady();
-    }
-
-    /**
-     * Get account balance
-     */
-    public async getBalance(): Promise<number> {
-        try {
-            return await derivAPI.getBalance();
-        } catch (error) {
-            console.error('Error getting balance:', error);
-            return 0;
         }
     }
 }

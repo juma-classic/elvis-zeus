@@ -148,19 +148,30 @@ const SmartTradingCards: React.FC = () => {
             const tickHistory = result.data.tickHistory || [];
             const lastNTicks = tickHistory.slice(-overUnderCondition.lastNTicks);
             
+            console.log('[CONDITION] Checking last N ticks:', {
+                tickHistory: tickHistory.slice(-10), // Show last 10 for context
+                lastNTicks,
+                barrier: overUnderBarrier,
+                targetValue: overUnderCondition.targetValue
+            });
+            
             // Check if all last N ticks match the target (Over or Under)
             const allMatch = lastNTicks.every((tick: any) => {
                 const lastDigit = parseInt(tick.toString().slice(-1));
                 if (overUnderCondition.targetValue === 'Over') {
-                    return lastDigit > barrier;
+                    return lastDigit > overUnderBarrier;
                 } else {
-                    return lastDigit < barrier;
+                    return lastDigit < overUnderBarrier;
                 }
             });
 
             // If the "last N ticks" condition is not met, don't proceed
             if (!allMatch) {
                 console.log('[CONDITION] Main condition met, but last N ticks condition not satisfied');
+                console.log('[CONDITION] Last N ticks details:', lastNTicks.map((tick: any) => {
+                    const lastDigit = parseInt(tick.toString().slice(-1));
+                    return { tick, lastDigit, barrier: overUnderBarrier, isOver: lastDigit > overUnderBarrier };
+                }));
                 return;
             }
         }
@@ -245,6 +256,15 @@ const SmartTradingCards: React.FC = () => {
     const toggleOverUnderTrading = async () => {
         if (!overUnderActive) {
             // Starting auto trading
+            // Check if user is logged in first
+            const authToken = localStorage.getItem('authToken');
+            const activeLoginId = localStorage.getItem('active_loginid');
+            
+            if (!authToken || !activeLoginId) {
+                alert('Please login to Deriv first. Click the "Login" button in the top right corner.');
+                return;
+            }
+            
             // Initialize executor before starting
             const initialized = await smartTradingExecutor.initialize();
             if (!initialized) {
@@ -272,6 +292,15 @@ const SmartTradingCards: React.FC = () => {
 
     const toggleEvenOddTrading = async () => {
         if (!evenOddActive) {
+            // Check if user is logged in first
+            const authToken = localStorage.getItem('authToken');
+            const activeLoginId = localStorage.getItem('active_loginid');
+            
+            if (!authToken || !activeLoginId) {
+                alert('Please login to Deriv first. Click the "Login" button in the top right corner.');
+                return;
+            }
+            
             // Initialize executor before starting
             const initialized = await smartTradingExecutor.initialize();
             if (!initialized) {
