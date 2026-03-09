@@ -149,7 +149,10 @@ const SmartTradingCards: React.FC = () => {
     }, [overUnderActive, overUnderCondition, evenOddActive, evenOddCondition]);
 
     const checkOverUnderCondition = (result: AnalysisResult) => {
-        const prob = overUnderCondition.targetValue === 'Over' ? overProb : underProb;
+        // Get probability directly from the result data (not from state which may be stale)
+        const overProbFromResult = parseFloat(result.data.overProbability);
+        const underProbFromResult = parseFloat(result.data.underProbability);
+        const prob = overUnderCondition.targetValue === 'Over' ? overProbFromResult : underProbFromResult;
         
         // Check main probability condition
         let mainConditionMet = false;
@@ -173,6 +176,8 @@ const SmartTradingCards: React.FC = () => {
 
         console.log('[CONDITION] Checking Over/Under conditions:', {
             probability: prob,
+            overProbability: overProbFromResult,
+            underProbability: underProbFromResult,
             threshold: overUnderCondition.threshold,
             comparison: overUnderCondition.comparison,
             mainConditionMet,
