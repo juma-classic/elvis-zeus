@@ -108,15 +108,23 @@ const MarketProbabilityCard: React.FC<MarketProbabilityCardProps> = ({
         // Handle condition not met - Auto switch to STOP mode
         if (!mainConditionMet) {
             if (botRunning) {
-                console.log('[BOT BUILDER CARD] Conditions not met, stopping bot...');
-                setAutoMode('auto-stop');
+                console.log('[BOT BUILDER CARD] Conditions not met, clicking Auto Stop button...');
                 
-                const stopButton = document.getElementById('db-animation__stop-button');
-                if (stopButton && !stopButton.hasAttribute('disabled')) {
-                    stopButton.click();
-                    setBotRunning(false);
-                    setBotLoading(false);
-                    console.log('[BOT BUILDER CARD] Bot stopped');
+                // Programmatically click the Auto Stop button
+                const autoStopButton = document.querySelector('.market-probability-card .control-btn[title="Pause when conditions are bad"]') as HTMLButtonElement;
+                if (autoStopButton) {
+                    autoStopButton.click();
+                    console.log('[BOT BUILDER CARD] Auto Stop button clicked programmatically');
+                } else {
+                    // Fallback: manually set mode and stop bot
+                    setAutoMode('auto-stop');
+                    const stopButton = document.getElementById('db-animation__stop-button');
+                    if (stopButton && !stopButton.hasAttribute('disabled')) {
+                        stopButton.click();
+                        setBotRunning(false);
+                        setBotLoading(false);
+                        console.log('[BOT BUILDER CARD] Bot stopped (fallback)');
+                    }
                 }
             }
             return;

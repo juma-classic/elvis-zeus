@@ -200,14 +200,22 @@ const SmartTradingCards: React.FC = () => {
             // Automatically switch to auto-stop mode and stop bot
             if (overUnderBotRunning) {
                 console.log('[AUTO-SWITCH] Switching to Auto Stop mode');
-                setOverUnderAutoMode('auto-stop');
                 
-                const stopButton = document.getElementById('db-animation__stop-button');
-                if (stopButton && !stopButton.hasAttribute('disabled')) {
-                    console.log('[AUTO-STOP] Conditions fell below threshold, pausing bot...');
-                    stopButton.click();
-                    setOverUnderBotRunning(false);
-                    setOverUnderBotLoading(false); // Reset loading flag when stopping
+                // Programmatically click the Auto Stop button to trigger its full behavior
+                const autoStopButton = document.querySelector('.control-btn[title="Automatically pause when conditions are bad"]') as HTMLButtonElement;
+                if (autoStopButton) {
+                    autoStopButton.click();
+                    console.log('[AUTO-SWITCH] Auto Stop button clicked programmatically');
+                } else {
+                    // Fallback: manually set mode and stop bot
+                    setOverUnderAutoMode('auto-stop');
+                    const stopButton = document.getElementById('db-animation__stop-button');
+                    if (stopButton && !stopButton.hasAttribute('disabled')) {
+                        console.log('[AUTO-STOP] Conditions fell below threshold, pausing bot...');
+                        stopButton.click();
+                        setOverUnderBotRunning(false);
+                        setOverUnderBotLoading(false); // Reset loading flag when stopping
+                    }
                 }
             }
             
