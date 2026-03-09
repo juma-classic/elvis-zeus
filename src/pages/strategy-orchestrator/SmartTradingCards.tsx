@@ -28,22 +28,41 @@ interface TradingSettings {
 }
 
 const SmartTradingCards: React.FC = () => {
+    // Load settings from localStorage
+    const loadSettings = () => {
+        try {
+            const saved = localStorage.getItem('smart_trading_settings');
+            if (saved) {
+                return JSON.parse(saved);
+            }
+        } catch (error) {
+            console.error('Error loading settings:', error);
+        }
+        return null;
+    };
+
+    const savedSettings = loadSettings();
+
     // Over/Under state
-    const [overUnderBarrier, setOverUnderBarrier] = useState(5);
+    const [overUnderBarrier, setOverUnderBarrier] = useState(savedSettings?.overUnderBarrier ?? 5);
     const [overProb, setOverProb] = useState(0);
     const [underProb, setUnderProb] = useState(0);
-    const [overUnderCondition, setOverUnderCondition] = useState<TradingCondition>({
-        enabled: false,
-        lastNTicks: 3,
-        targetValue: 'Over',
-        comparison: '>',
-        threshold: 55,
-    });
-    const [overUnderSettings, setOverUnderSettings] = useState<TradingSettings>({
-        stake: 0.5,
-        ticks: 1,
-        martingale: 1,
-    });
+    const [overUnderCondition, setOverUnderCondition] = useState<TradingCondition>(
+        savedSettings?.overUnderCondition ?? {
+            enabled: false,
+            lastNTicks: 3,
+            targetValue: 'Over',
+            comparison: '>',
+            threshold: 55,
+        }
+    );
+    const [overUnderSettings, setOverUnderSettings] = useState<TradingSettings>(
+        savedSettings?.overUnderSettings ?? {
+            stake: 0.5,
+            ticks: 1,
+            martingale: 1,
+        }
+    );
     const [overUnderActive, setOverUnderActive] = useState(false);
 
     // Even/Odd state
@@ -51,23 +70,38 @@ const SmartTradingCards: React.FC = () => {
     const [oddProb, setOddProb] = useState(0);
     const [lastDigitsPattern, setLastDigitsPattern] = useState<string[]>([]);
     const [currentStreak, setCurrentStreak] = useState({ count: 0, type: '' });
-    const [evenOddCondition, setEvenOddCondition] = useState<TradingCondition>({
-        enabled: false,
-        lastNTicks: 3,
-        targetValue: 'Even',
-        comparison: '>=',
-        threshold: 55,
-    });
-    const [evenOddSettings, setEvenOddSettings] = useState<TradingSettings>({
-        stake: 0.5,
-        ticks: 1,
-        martingale: 1,
-    });
+    const [evenOddCondition, setEvenOddCondition] = useState<TradingCondition>(
+        savedSettings?.evenOddCondition ?? {
+            enabled: false,
+            lastNTicks: 3,
+            targetValue: 'Even',
+            comparison: '>=',
+            threshold: 55,
+        }
+    );
+    const [evenOddSettings, setEvenOddSettings] = useState<TradingSettings>(
+        savedSettings?.evenOddSettings ?? {
+            stake: 0.5,
+            ticks: 1,
+            martingale: 1,
+        }
+    );
     const [evenOddActive, setEvenOddActive] = useState(false);
 
     // Recent trades state
     const [recentTrades, setRecentTrades] = useState<TradeHistory[]>([]);
 
+    // Save settings to localStorage whenever they change
+    useEffect(() => {
+        const settings = {
+            overUnderBarrier,
+            overUnderCondition,
+            overUnderSettings,
+            evenOddCondition,
+            evenOddSettings,
+        };
+        localStorage.setItem('smart_trading_settings', JSON.stringify(settings));
+    }, [overUnderBarrier, overUnderCondition, overUnderSettings, evenOddCondition, evenOddSettings]);
     useEffect(() => {
         // Listen to market analyzer analysis results
         const handleAnalysis = (result: AnalysisResult) => {
@@ -145,9 +179,17 @@ const SmartTradingCards: React.FC = () => {
             lastNTicksEnabled: overUnderCondition.enabled
         });
 
-        // If main condition is not met, don't proceed
+        // If main condition is not met, stop the bot if it's running
         if (!mainConditionMet) {
             console.log('[CONDITION] Main probability condition NOT met');
+            
+            // Auto-stop bot if conditions fall below threshold
+            const stopButton = document.getElementById('db-animation__stop-button');
+            if (stopButton && !stopButton.hasAttribute('disabled')) {
+                console.log('[AUTO-STOP] Conditions fell below threshold, stopping bot...');
+                stopButton.click();
+            }
+            
             return;
         }
 

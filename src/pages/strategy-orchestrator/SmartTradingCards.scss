@@ -66,10 +66,13 @@
                     font-size: 1rem;
                     font-weight: 600;
                     text-align: center;
+                    color: #1f2937; // Dark text color
+                    background: #f9fafb; // Light gray background
 
                     &:focus {
                         outline: none;
                         border-color: #7b1fa2;
+                        background: white;
                     }
                 }
             }
