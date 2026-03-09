@@ -1220,16 +1220,21 @@ const AppWrapper = observer(() => {
     useEffect(() => {
         const handleBotFileLoad = async (event: Event) => {
             const customEvent = event as CustomEvent;
-            const { botFile, source, autoRun } = customEvent.detail;
-            console.log('[LOAD] Received bot file load request:', { botFile, source, autoRun });
+            const { botFile, source, autoRun, silent } = customEvent.detail;
+            console.log('[LOAD] Received bot file load request:', { botFile, source, autoRun, silent });
 
             // Find the bot in the bots array
             const bot = bots.find(b => b.filePath === botFile);
             if (bot) {
                 console.log('[SUCCESS] Found bot, loading into Bot Builder...');
 
-                // Switch to Bot Builder tab first
-                setActiveTab(DBOT_TABS.BOT_BUILDER);
+                // Only switch to Bot Builder tab if NOT in silent mode
+                if (!silent) {
+                    setActiveTab(DBOT_TABS.BOT_BUILDER);
+                    console.log('[INFO] Switched to Bot Builder tab');
+                } else {
+                    console.log('[INFO] Silent mode - staying on current page');
+                }
 
                 // Load the bot directly
                 await handleBotClick(bot);
