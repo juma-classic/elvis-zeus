@@ -12,6 +12,7 @@ import SaveModal from '../dashboard/bot-list/save-modal';
 import BotBuilderTourHandler from '../tutorials/dbot-tours/bot-builder-tour';
 import QuickStrategy1 from './quick-strategy';
 import WorkspaceWrapper from './workspace-wrapper';
+import MarketProbabilityCard from './MarketProbabilityCard';
 
 const BotBuilder = observer(() => {
     const { dashboard, app, run_panel, toolbar, quick_strategy, blockly_store } = useStore();
@@ -117,6 +118,8 @@ const BotBuilder = observer(() => {
                 <div id='scratch_div' ref={el_ref}>
                     <WorkspaceWrapper />
                 </div>
+                {/* Market Probability Card - shows when bot builder is active */}
+                {active_tab === 1 && !is_preview_on_popup && <MarketProbabilityCard />}
             </div>
             {active_tab === 1 && <BotBuilderTourHandler is_mobile={!isDesktop} />}
             {/* removed this outside from toolbar becuase it needs to loaded seperately without dependency */}
