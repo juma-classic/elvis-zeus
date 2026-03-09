@@ -63,8 +63,8 @@ const SmartTradingCards: React.FC = () => {
             martingale: 1,
         }
     );
-    const [overUnderActive, setOverUnderActive] = useState(false);
-    const [overUnderAutoMode, setOverUnderAutoMode] = useState<'auto-stop' | 'auto-continue' | null>(null);
+    const [overUnderActive, setOverUnderActive] = useState(savedSettings?.overUnderActive ?? false);
+    const [overUnderAutoMode, setOverUnderAutoMode] = useState<'auto-stop' | 'auto-continue' | null>(savedSettings?.overUnderAutoMode ?? null);
     const [overUnderBotRunning, setOverUnderBotRunning] = useState(false);
 
     // Even/Odd state
@@ -88,8 +88,8 @@ const SmartTradingCards: React.FC = () => {
             martingale: 1,
         }
     );
-    const [evenOddActive, setEvenOddActive] = useState(false);
-    const [evenOddAutoMode, setEvenOddAutoMode] = useState<'auto-stop' | 'auto-continue' | null>(null);
+    const [evenOddActive, setEvenOddActive] = useState(savedSettings?.evenOddActive ?? false);
+    const [evenOddAutoMode, setEvenOddAutoMode] = useState<'auto-stop' | 'auto-continue' | null>(savedSettings?.evenOddAutoMode ?? null);
 
     // Recent trades state
     const [recentTrades, setRecentTrades] = useState<TradeHistory[]>([]);
@@ -100,11 +100,15 @@ const SmartTradingCards: React.FC = () => {
             overUnderBarrier,
             overUnderCondition,
             overUnderSettings,
+            overUnderActive,
+            overUnderAutoMode,
             evenOddCondition,
             evenOddSettings,
+            evenOddActive,
+            evenOddAutoMode,
         };
         localStorage.setItem('smart_trading_settings', JSON.stringify(settings));
-    }, [overUnderBarrier, overUnderCondition, overUnderSettings, evenOddCondition, evenOddSettings]);
+    }, [overUnderBarrier, overUnderCondition, overUnderSettings, overUnderActive, overUnderAutoMode, evenOddCondition, evenOddSettings, evenOddActive, evenOddAutoMode]);
     useEffect(() => {
         // Listen to market analyzer analysis results
         const handleAnalysis = (result: AnalysisResult) => {
