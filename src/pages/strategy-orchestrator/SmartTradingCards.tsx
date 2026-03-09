@@ -200,7 +200,10 @@ const SmartTradingCards: React.FC = () => {
             threshold: overUnderCondition.threshold,
             comparison: overUnderCondition.comparison,
             lastNTicksEnabled: overUnderCondition.enabled,
-            lastNTicks: overUnderCondition.lastNTicks
+            lastNTicks: overUnderCondition.lastNTicks,
+            barrier: overUnderBarrier,
+            stake: overUnderSettings.stake,
+            symbol: marketAnalyzer.getStatus().symbol
         });
         
         // Load Raziel Over Under bot when ALL conditions are met
@@ -212,10 +215,62 @@ const SmartTradingCards: React.FC = () => {
             }
         }));
 
-        // Wait for bot to load, then trigger the Run button
+        // Wait for bot to load, then configure and trigger execution
         setTimeout(() => {
-            console.log('[EXECUTE] Triggering bot execution via Run button...');
+            console.log('[EXECUTE] Configuring bot with Smart Trading settings...');
             
+            try {
+                // Get Blockly workspace
+                const workspace = (window as any).Blockly?.derivWorkspace;
+                if (!workspace) {
+                    console.error('[ERROR] Blockly workspace not found');
+                    return;
+                }
+
+                // Configure bot settings
+                const allBlocks = workspace.getAllBlocks();
+                
+                // 1. Set Market Symbol
+                const marketBlock = allBlocks.find((block: any) => block.type === 'trade_definition_market');
+                if (marketBlock) {
+                    const symbol = marketAnalyzer.getStatus().symbol;
+                    marketBlock.setFieldValue(symbol, 'SYMBOL_LIST');
+                    console.log(`[CONFIG] ✓ Market set to: ${symbol}`);
+                }
+
+                // 2. Set Stake
+                const stakeBlock = allBlocks.find((block: any) => block.type === 'trade_definition_tradeoptions');
+                if (stakeBlock) {
+                    const stakeInput = stakeBlock.getInput('AMOUNT');
+                    if (stakeInput?.connection?.targetBlock()) {
+                        const numberBlock = stakeInput.connection.targetBlock();
+                        numberBlock.setFieldValue(overUnderSettings.stake.toString(), 'NUM');
+                        console.log(`[CONFIG] ✓ Stake set to: ${overUnderSettings.stake}`);
+                    }
+                }
+
+                // 3. Set Barrier (Prediction Before Loss and Prediction After Loss)
+                const predictionBlocks = allBlocks.filter((block: any) => 
+                    block.type === 'trade_definition_tradetype' || 
+                    block.type === 'trade_definition_contracttype'
+                );
+                
+                predictionBlocks.forEach((block: any) => {
+                    // Look for prediction/barrier fields
+                    const fields = ['PREDICTION_BEFORE_LOSS', 'PREDICTION_AFTER_LOSS', 'BARRIER', 'PREDICTION'];
+                    fields.forEach(fieldName => {
+                        if (block.getField(fieldName)) {
+                            block.setFieldValue(overUnderBarrier.toString(), fieldName);
+                            console.log(`[CONFIG] ✓ ${fieldName} set to: ${overUnderBarrier}`);
+                        }
+                    });
+                });
+
+                console.log('[CONFIG] Bot configuration complete');
+            } catch (error) {
+                console.error('[ERROR] Failed to configure bot:', error);
+            }
+
             // Open the run panel drawer
             const rootStore = (window as any).Blockly?.derivWorkspace?.store?.root_store;
             if (rootStore?.run_panel) {
