@@ -1220,8 +1220,8 @@ const AppWrapper = observer(() => {
     useEffect(() => {
         const handleBotFileLoad = async (event: Event) => {
             const customEvent = event as CustomEvent;
-            const { botFile, source } = customEvent.detail;
-            console.log('[LOAD] Received bot file load request:', { botFile, source });
+            const { botFile, source, autoRun } = customEvent.detail;
+            console.log('[LOAD] Received bot file load request:', { botFile, source, autoRun });
 
             // Find the bot in the bots array
             const bot = bots.find(b => b.filePath === botFile);
@@ -1235,6 +1235,24 @@ const AppWrapper = observer(() => {
                 await handleBotClick(bot);
 
                 console.log('[SUCCESS] Bot loaded successfully');
+
+                // Auto-run the bot if autoRun flag is true
+                if (autoRun) {
+                    setTimeout(() => {
+                        console.log('[AUTORUN] Auto-running bot...');
+                        try {
+                            const runButton = document.getElementById('db-animation__run-button');
+                            if (runButton) {
+                                runButton.click();
+                                console.log('[SUCCESS] Bot auto-started successfully');
+                            } else {
+                                console.warn('[WARN] Run button not found for auto-run');
+                            }
+                        } catch (error) {
+                            console.error('[ERROR] Failed to auto-run bot:', error);
+                        }
+                    }, 1500); // Wait 1.5s for bot to fully load before clicking run
+                }
             } else {
                 console.error('[ERROR] Bot not found:', botFile);
                 console.log('[INFO] Available bots:', bots.map(b => b.filePath));

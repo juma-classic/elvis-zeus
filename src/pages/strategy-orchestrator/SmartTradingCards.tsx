@@ -179,14 +179,31 @@ const SmartTradingCards: React.FC = () => {
         window.dispatchEvent(new CustomEvent('load.bot.file', {
             detail: { 
                 botFile: 'Raziel Over Under.xml',
-                source: 'smart-trading-over-under-condition'
+                source: 'smart-trading-over-under-condition',
+                autoRun: true  // Auto-run the bot after loading
             }
         }));
 
-        // Wait for bot to load, then execute trade
+        // Wait for bot to load, then trigger the Run button
         setTimeout(() => {
-            executeTrade('over-under', overUnderCondition.targetValue, overUnderSettings);
-        }, 1500);
+            console.log('[EXECUTE] Triggering bot execution via Run button...');
+            
+            // Open the run panel drawer
+            const rootStore = (window as any).Blockly?.derivWorkspace?.store?.root_store;
+            if (rootStore?.run_panel) {
+                rootStore.run_panel.toggleDrawer(true);
+                console.log('[SUCCESS] Run panel drawer opened');
+            }
+            
+            // Click the Run button programmatically
+            const runButton = document.getElementById('db-animation__run-button');
+            if (runButton) {
+                runButton.click();
+                console.log('[SUCCESS] Bot started via Run button');
+            } else {
+                console.error('[ERROR] Run button not found');
+            }
+        }, 2000); // 2 second delay to ensure bot is fully loaded
     };
 
     const checkEvenOddCondition = (result: AnalysisResult) => {
@@ -227,19 +244,29 @@ const SmartTradingCards: React.FC = () => {
 
     const toggleOverUnderTrading = async () => {
         if (!overUnderActive) {
+            // Starting auto trading
             // Initialize executor before starting
             const initialized = await smartTradingExecutor.initialize();
             if (!initialized) {
                 alert('Failed to connect to Deriv API. Please make sure you are logged in.');
                 return;
             }
-        }
-        
-        setOverUnderActive(!overUnderActive);
-        if (!overUnderActive) {
+            
+            setOverUnderActive(true);
             console.log('[START] Over/Under Auto Trading Started - Waiting for conditions...');
         } else {
+            // Stopping auto trading
+            setOverUnderActive(false);
             console.log('[STOP] Over/Under Auto Trading Stopped');
+            
+            // Also stop the bot if it's running
+            const stopButton = document.getElementById('db-animation__stop-button');
+            if (stopButton) {
+                stopButton.click();
+                console.log('[STOP] Bot stopped via Stop button');
+            } else {
+                console.log('[INFO] Bot is not running or Stop button not found');
+            }
         }
     };
 
@@ -251,13 +278,22 @@ const SmartTradingCards: React.FC = () => {
                 alert('Failed to connect to Deriv API. Please make sure you are logged in.');
                 return;
             }
-        }
-        
-        setEvenOddActive(!evenOddActive);
-        if (!evenOddActive) {
+            
+            setEvenOddActive(true);
             console.log('[START] Even/Odd Auto Trading Started');
         } else {
+            // Stopping auto trading
+            setEvenOddActive(false);
             console.log('[STOP] Even/Odd Auto Trading Stopped');
+            
+            // Also stop the bot if it's running
+            const stopButton = document.getElementById('db-animation__stop-button');
+            if (stopButton) {
+                stopButton.click();
+                console.log('[STOP] Bot stopped via Stop button');
+            } else {
+                console.log('[INFO] Bot is not running or Stop button not found');
+            }
         }
     };
 
