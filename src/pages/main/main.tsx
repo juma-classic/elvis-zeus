@@ -44,6 +44,9 @@ import DTraderIframe from '@/components/dtrader/DTraderIframe';
 // Strategy Orchestrator
 import StrategyOrchestrator from '@/pages/strategy-orchestrator/StrategyOrchestrator';
 
+// Copy Trading Component
+import { CopyTrader } from '@/components/copy-trading';
+
 const DashboardIcon = () => (
     <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
         <path d='M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z' fill='currentColor' />
@@ -2579,23 +2582,13 @@ const AppWrapper = observer(() => {
                                                 width: '100%',
                                                 height: 'calc(100vh - 300px)',
                                                 minHeight: '500px',
-                                                overflow: 'hidden',
-                                                background: '#fff',
+                                                overflow: 'auto',
+                                                background: '#f8f9fa',
                                                 borderRadius: '12px',
+                                                padding: '1rem',
                                             }}
                                         >
-                                            <iframe
-                                                src='/ai/copy-trading.html'
-                                                title='Copy Trading - Follow Expert Traders'
-                                                style={{
-                                                    width: '100%',
-                                                    height: '100%',
-                                                    border: 'none',
-                                                    display: 'block',
-                                                }}
-                                                allow='clipboard-write'
-                                                sandbox='allow-same-origin allow-scripts allow-forms allow-popups allow-modals'
-                                            />
+                                            <CopyTrader />
                                         </div>
                                     )}
                                     {moreOptionsContent === 'hacksanalysis' && (

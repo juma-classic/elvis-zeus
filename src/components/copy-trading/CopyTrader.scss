@@ -1,0 +1,393 @@
+.copy-trader-container {
+  padding: 2rem;
+  max-width: 800px;
+  margin: 0 auto;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.copy-trader-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #e9ecef;
+
+  h2 {
+    color: #2c3e50;
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin: 0;
+  }
+
+  .close-btn {
+    background: none;
+    border: none;
+    font-size: 2rem;
+    color: #6c757d;
+    cursor: pointer;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background: #f8f9fa;
+      color: #dc3545;
+    }
+  }
+}
+
+.message-banner {
+  background: #d4edda;
+  color: #155724;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  border: 1px solid #c3e6cb;
+  font-weight: 500;
+}
+
+.loading-banner {
+  background: #fff3cd;
+  color: #856404;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  border: 1px solid #ffeaa7;
+  font-weight: 500;
+  text-align: center;
+}
+
+.statistics-section {
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background: #f8f9fa;
+  border-radius: 10px;
+  border: 1px solid #e9ecef;
+
+  h3 {
+    color: #2c3e50;
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin: 0 0 1rem 0;
+  }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+  }
+
+  .stat-item {
+    background: #ffffff;
+    padding: 1rem;
+    border-radius: 8px;
+    border: 1px solid #e9ecef;
+    text-align: center;
+    transition: all 0.3s ease;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .stat-label {
+      display: block;
+      font-size: 0.85rem;
+      color: #6c757d;
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-value {
+      display: block;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #2c3e50;
+
+      &.success {
+        color: #28a745;
+      }
+
+      &.failed {
+        color: #dc3545;
+      }
+
+      &.profit {
+        color: #28a745;
+      }
+
+      &.loss {
+        color: #dc3545;
+      }
+    }
+  }
+}
+
+.demo-copy-section,
+.token-section,
+.main-copy-section,
+.tutorial-section {
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background: #f8f9fa;
+  border-radius: 10px;
+  border: 1px solid #e9ecef;
+
+  h3 {
+    color: #2c3e50;
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin: 0 0 0.5rem 0;
+  }
+
+  p {
+    color: #6c757d;
+    margin: 0 0 1rem 0;
+    font-size: 0.95rem;
+  }
+}
+
+// Copy Trading Button Styles (adapted from Korean site)
+.copy-trading-btn {
+  cursor: pointer;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 30px;
+  font-weight: 700;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  min-width: 200px;
+
+  &.start {
+    color: #ffffff;
+    background-color: #28a745;
+    box-shadow: 0 2px 10px rgba(40, 167, 69, 0.3);
+
+    &:hover {
+      background-color: #218838;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(40, 167, 69, 0.4);
+    }
+  }
+
+  &.stop {
+    color: #ffffff;
+    background-color: #dc3545;
+    box-shadow: 0 2px 10px rgba(220, 53, 69, 0.3);
+
+    &:hover {
+      background-color: #c82333;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(220, 53, 69, 0.4);
+    }
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none !important;
+    box-shadow: none !important;
+  }
+
+  &:hover:not(:disabled) {
+    filter: brightness(0.95);
+    transform: translateY(-1px);
+  }
+}
+
+// Token Management Styles
+.token-input-container {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+
+  .token-input {
+    flex: 1;
+    padding: 12px 16px;
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+
+    &:focus {
+      outline: none;
+      border-color: #007bff;
+      box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+    }
+  }
+
+  .add-token-btn {
+    padding: 12px 24px;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background: #0056b3;
+      transform: translateY(-1px);
+    }
+  }
+}
+
+.tokens-container {
+  background: #ffffff;
+  border: 2px solid #e9ecef;
+  border-radius: 10px;
+  padding: 1rem;
+  max-height: 300px;
+  overflow-y: auto;
+
+  .no-tokens {
+    text-align: center;
+    color: #6c757d;
+    font-style: italic;
+    margin: 2rem 0;
+  }
+}
+
+.token-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  margin-bottom: 0.5rem;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: #e9ecef;
+    transform: translateX(5px);
+  }
+
+  .token-text {
+    font-family: 'Courier New', monospace;
+    font-weight: 500;
+    color: #2c3e50;
+    word-break: break-all;
+  }
+
+  .remove-token-btn {
+    background: #dc3545;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background: #c82333;
+      transform: scale(1.05);
+    }
+  }
+}
+
+.warning-text {
+  color: #dc3545;
+  font-weight: 500;
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+}
+
+.tutorial-btn {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 12px 30px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+  }
+}
+
+// Dark mode support
+.dark_active {
+  .copy-trader-container {
+    background: #2a2e35;
+    color: #ffffff;
+  }
+
+  .copy-trader-header h2 {
+    color: #ffffff;
+  }
+
+  .demo-copy-section,
+  .token-section,
+  .main-copy-section,
+  .tutorial-section {
+    background: #343a40;
+    border-color: #495057;
+
+    h3 {
+      color: #ffffff;
+    }
+
+    p {
+      color: #adb5bd;
+    }
+  }
+
+  .token-input {
+    color: #ffffff;
+    background: #343a40;
+    border-color: #495057;
+  }
+
+  .tokens-container {
+    background: #2a2e35;
+    border-color: #495057;
+  }
+
+  .token-item {
+    background: #343a40;
+    border-color: #495057;
+
+    .token-text {
+      color: #adb5bd;
+    }
+  }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .copy-trader-container {
+    padding: 1rem;
+    margin: 1rem;
+  }
+
+  .token-input-container {
+    flex-direction: column;
+
+    .add-token-btn {
+      width: 100%;
+    }
+  }
+
+  .copy-trading-btn {
+    width: 100%;
+    min-width: auto;
+  }
+}
