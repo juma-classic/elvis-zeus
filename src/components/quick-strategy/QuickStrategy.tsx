@@ -30,9 +30,10 @@ const FormField: React.FC<{
     onChange: (value: any) => void;
     options?: { value: string; label: string }[];
     min?: number;
+    max?: number;
     step?: number;
     disabled?: boolean;
-}> = ({ label, type, value, onChange, options, min, step, disabled }) => (
+}> = ({ label, type, value, onChange, options, min, max, step, disabled }) => (
     <div className="form-field">
         <label className="form-field__label">{label}</label>
         {type === 'select' ? (
@@ -55,6 +56,7 @@ const FormField: React.FC<{
                 value={value}
                 onChange={(e) => onChange(Number(e.target.value))}
                 min={min}
+                max={max}
                 step={step}
                 disabled={disabled}
             />
@@ -76,27 +78,30 @@ const QuickStrategy: React.FC = observer(() => {
         executeStrategy
     } = quickStrategyService;
 
-    // Market options (from Korean site configuration)
+    // Market options (matching Korean site configuration)
     const marketOptions = [
-        { value: 'R_10', label: 'Volatility 10 Index' },
-        { value: 'R_25', label: 'Volatility 25 Index' },
-        { value: 'R_50', label: 'Volatility 50 Index' },
-        { value: 'R_75', label: 'Volatility 75 Index' },
-        { value: 'R_100', label: 'Volatility 100 Index' },
-        { value: '1HZ10V', label: 'Volatility 10 (1s) Index' },
-        { value: '1HZ25V', label: 'Volatility 25 (1s) Index' },
-        { value: '1HZ50V', label: 'Volatility 50 (1s) Index' },
+        { value: '1HZ100V', label: 'Volatility 100 (1s) Index' },  // Korean site default
         { value: '1HZ75V', label: 'Volatility 75 (1s) Index' },
-        { value: '1HZ100V', label: 'Volatility 100 (1s) Index' }
+        { value: '1HZ50V', label: 'Volatility 50 (1s) Index' },
+        { value: '1HZ25V', label: 'Volatility 25 (1s) Index' },
+        { value: '1HZ10V', label: 'Volatility 10 (1s) Index' },
+        { value: 'R_100', label: 'Volatility 100 Index' },
+        { value: 'R_75', label: 'Volatility 75 Index' },
+        { value: 'R_50', label: 'Volatility 50 Index' },
+        { value: 'R_25', label: 'Volatility 25 Index' },
+        { value: 'R_10', label: 'Volatility 10 Index' }
     ];
 
-    // Trade type options
+    // Trade type options (updated for digit strategies)
     const tradeTypeOptions = [
         { value: 'callput', label: 'Rise/Fall' },
         { value: 'higherlower', label: 'Higher/Lower' },
         { value: 'touchnotouch', label: 'Touch/No Touch' },
         { value: 'endsinout', label: 'Ends In/Out' },
-        { value: 'staysinout', label: 'Stays In/Out' }
+        { value: 'staysinout', label: 'Stays In/Out' },
+        { value: 'overunder', label: 'Over/Under' },
+        { value: 'evenodd', label: 'Even/Odd' },
+        { value: 'matchesdiffers', label: 'Matches/Differs' }
     ];
 
     // Duration type options
@@ -271,6 +276,20 @@ const QuickStrategy: React.FC = observer(() => {
                                         disabled={isLoading}
                                     />
                                 </div>
+                                {selected_strategy === 'OVER_UNDER' && (
+                                    <div className="form-row">
+                                        <FormField
+                                            label="Prediction Digit (0-9)"
+                                            type="number"
+                                            value={form_data.prediction || 5}
+                                            onChange={(value) => setValue('prediction', value)}
+                                            min={0}
+                                            max={9}
+                                            step={1}
+                                            disabled={isLoading}
+                                        />
+                                    </div>
+                                )}
                                 <div className="form-row">
                                     <FormField
                                         label="Take Profit"

@@ -11,6 +11,7 @@ export interface QuickStrategyFormData {
     size: number;
     profit: number;
     loss: number;
+    prediction?: number; // For Over/Under strategies
     action: 'RUN' | 'EDIT';
 }
 
@@ -44,19 +45,38 @@ export const QUICK_STRATEGIES = {
         fields: ['symbol', 'tradetype', 'durationtype', 'duration', 'stake', 'size', 'profit', 'loss'],
         disabled_markets: [],
         disabled_trade_types: []
+    },
+    OVER_UNDER: {
+        label: 'Over/Under',
+        description: 'Predicts if the last digit will be over or under a specific number',
+        fields: ['symbol', 'tradetype', 'durationtype', 'duration', 'stake', 'size', 'profit', 'loss', 'prediction'],
+        disabled_markets: [],
+        disabled_trade_types: [],
+        trade_type: 'overunder',
+        contract_types: ['DIGITOVER', 'DIGITUNDER']
+    },
+    EVEN_ODD: {
+        label: 'Even/Odd',
+        description: 'Predicts if the last digit will be even or odd',
+        fields: ['symbol', 'tradetype', 'durationtype', 'duration', 'stake', 'size', 'profit', 'loss'],
+        disabled_markets: [],
+        disabled_trade_types: [],
+        trade_type: 'evenodd',
+        contract_types: ['DIGITEVEN', 'DIGITODD']
     }
 };
 
 // Default configuration from Korean site
 export const QUICK_STRATEGY_DEFAULTS = {
-    symbol: 'R_100',
+    symbol: '1HZ100V',  // Korean site default: Volatility 100 (1s) Index
     tradetype: 'callput',
     durationtype: 't',
     duration: 1,
     stake: 1,
-    size: 2,
+    size: 1,  // Korean site default: 1x multiplier
     profit: 10,
     loss: 10,
+    prediction: 5, // Default prediction digit for Over/Under
     action: 'RUN' as const
 };
 
@@ -113,14 +133,33 @@ class QuickStrategyService {
     }
 
     get is_valid_form(): boolean {
-        const { stake, size, profit, loss, duration } = this.form_data;
-        return stake > 0 && size > 0 && profit > 0 && loss > 0 && duration > 0;
+        const { stake, size, profit, loss, duration, prediction } = this.form_data;
+        const basicValidation = stake > 0 && size > 0 && profit > 0 && loss > 0 && duration > 0;
+        
+        // Additional validation for Over/Under strategies
+        if (this.selected_strategy === 'OVER_UNDER') {
+            return basicValidation && prediction !== undefined && prediction >= 0 && prediction <= 9;
+        }
+        
+        return basicValidation;
     }
 
     // Generate strategy XML based on selected strategy and form data
     generateStrategyXML = (): string => {
         const { selected_strategy, form_data } = this;
-        const { symbol, tradetype, durationtype, duration, stake, size, profit, loss } = form_data;
+        const { symbol, tradetype, durationtype, duration, stake, size, profit, loss, prediction } = form_data;
+
+        // Determine trade type and contract type based on strategy
+        let actualTradeType = tradetype;
+        let contractType = 'CALL';
+        
+        if (selected_strategy === 'OVER_UNDER') {
+            actualTradeType = 'overunder';
+            contractType = 'DIGITOVER'; // Default to OVER, can be changed in strategy logic
+        } else if (selected_strategy === 'EVEN_ODD') {
+            actualTradeType = 'evenodd';
+            contractType = 'DIGITEVEN'; // Default to EVEN, can be changed in strategy logic
+        }
 
         // Base XML template for quick strategies
         let xml = `<?xml version="1.0" encoding="UTF-8"?>
@@ -129,14 +168,23 @@ class QuickStrategyService {
     <variable id="stake">stake</variable>
     <variable id="profit">profit</variable>
     <variable id="loss">loss</variable>
-    <variable id="size">size</variable>
+    <variable id="size">size</variable>`;
+
+        // Add prediction variable for Over/Under strategies
+        if (selected_strategy === 'OVER_UNDER') {
+            xml += `
+    <variable id="prediction">prediction</variable>`;
+        }
+
+        xml += `
   </variables>
   <block type="trade_definition_tradeoptions" id="trade_definition" x="0" y="0">
     <field name="MARKET_LIST">${symbol}</field>
     <field name="SUBMARKET_LIST">random_index</field>
     <field name="SYMBOL_LIST">${symbol}</field>
-    <field name="TRADETYPE_LIST">${tradetype}</field>
-    <field name="TYPE_LIST">CALL</field>
+    <field name="TRADETYPECAT_LIST">${selected_strategy === 'OVER_UNDER' || selected_strategy === 'EVEN_ODD' ? 'digits' : 'callput'}</field>
+    <field name="TRADETYPE_LIST">${actualTradeType}</field>
+    <field name="TYPE_LIST">${contractType}</field>
     <field name="CANDLEINTERVAL_LIST">60</field>
     <field name="DURATIONTYPE_LIST">${durationtype}</field>
     <value name="DURATION">
@@ -148,7 +196,19 @@ class QuickStrategyService {
       <block type="variables_get" id="stake_var">
         <field name="VAR">stake</field>
       </block>
-    </value>
+    </value>`;
+
+        // Add prediction value for Over/Under strategies
+        if (selected_strategy === 'OVER_UNDER') {
+            xml += `
+    <value name="PREDICTION">
+      <block type="variables_get" id="prediction_var">
+        <field name="VAR">prediction</field>
+      </block>
+    </value>`;
+        }
+
+        xml += `
     <next>
       <block type="trade_definition_restartonerror" id="restart_on_error">
         <field name="RESTARTONERROR">TRUE</field>
@@ -164,6 +224,12 @@ class QuickStrategyService {
                 break;
             case 'OSCARS_GRIND':
                 xml += this.generateOscarsGrindLogic();
+                break;
+            case 'OVER_UNDER':
+                xml += this.generateOverUnderLogic();
+                break;
+            case 'EVEN_ODD':
+                xml += this.generateEvenOddLogic();
                 break;
         }
 
@@ -203,7 +269,22 @@ class QuickStrategyService {
         <field name="NUM">${size}</field>
       </block>
     </value>
-  </block>
+  </block>`;
+
+        // Add prediction initialization for Over/Under strategies
+        if (selected_strategy === 'OVER_UNDER') {
+            xml += `
+  <block type="variables_set" id="init_prediction" x="0" y="500">
+    <field name="VAR">prediction</field>
+    <value name="VALUE">
+      <block type="math_number" id="initial_prediction">
+        <field name="NUM">${prediction || 5}</field>
+      </block>
+    </value>
+  </block>`;
+        }
+
+        xml += `
 </xml>`;
 
         return xml;
@@ -367,6 +448,114 @@ class QuickStrategyService {
                             </value>
                             <value name="B">
                               <block type="variables_get" id="unit_size">
+                                <field name="VAR">size</field>
+                              </block>
+                            </value>
+                          </block>
+                        </value>
+                      </block>
+                    </statement>
+                  </block>
+                </next>
+              </block>
+            </statement>
+          </block>`;
+    };
+
+    private generateOverUnderLogic = (): string => {
+        return `
+          <block type="after_purchase" id="after_purchase">
+            <statement name="AFTERPURCHASE_STACK">
+              <block type="controls_if" id="over_under_logic">
+                <value name="IF0">
+                  <block type="contract_check_result" id="check_win">
+                    <field name="CHECK_RESULT">win</field>
+                  </block>
+                </value>
+                <statement name="DO0">
+                  <block type="variables_set" id="reset_stake_win">
+                    <field name="VAR">stake</field>
+                    <value name="VALUE">
+                      <block type="math_number" id="base_stake">
+                        <field name="NUM">${this.form_data.stake}</field>
+                      </block>
+                    </value>
+                  </block>
+                </statement>
+                <next>
+                  <block type="controls_if" id="loss_logic">
+                    <value name="IF0">
+                      <block type="contract_check_result" id="check_loss">
+                        <field name="CHECK_RESULT">loss</field>
+                      </block>
+                    </value>
+                    <statement name="DO0">
+                      <block type="variables_set" id="increase_stake">
+                        <field name="VAR">stake</field>
+                        <value name="VALUE">
+                          <block type="math_arithmetic" id="multiply_stake">
+                            <field name="OP">MULTIPLY</field>
+                            <value name="A">
+                              <block type="variables_get" id="current_stake">
+                                <field name="VAR">stake</field>
+                              </block>
+                            </value>
+                            <value name="B">
+                              <block type="variables_get" id="multiplier">
+                                <field name="VAR">size</field>
+                              </block>
+                            </value>
+                          </block>
+                        </value>
+                      </block>
+                    </statement>
+                  </block>
+                </next>
+              </block>
+            </statement>
+          </block>`;
+    };
+
+    private generateEvenOddLogic = (): string => {
+        return `
+          <block type="after_purchase" id="after_purchase">
+            <statement name="AFTERPURCHASE_STACK">
+              <block type="controls_if" id="even_odd_logic">
+                <value name="IF0">
+                  <block type="contract_check_result" id="check_win">
+                    <field name="CHECK_RESULT">win</field>
+                  </block>
+                </value>
+                <statement name="DO0">
+                  <block type="variables_set" id="reset_stake_win">
+                    <field name="VAR">stake</field>
+                    <value name="VALUE">
+                      <block type="math_number" id="base_stake">
+                        <field name="NUM">${this.form_data.stake}</field>
+                      </block>
+                    </value>
+                  </block>
+                </statement>
+                <next>
+                  <block type="controls_if" id="loss_logic">
+                    <value name="IF0">
+                      <block type="contract_check_result" id="check_loss">
+                        <field name="CHECK_RESULT">loss</field>
+                      </block>
+                    </value>
+                    <statement name="DO0">
+                      <block type="variables_set" id="increase_stake">
+                        <field name="VAR">stake</field>
+                        <value name="VALUE">
+                          <block type="math_arithmetic" id="multiply_stake">
+                            <field name="OP">MULTIPLY</field>
+                            <value name="A">
+                              <block type="variables_get" id="current_stake">
+                                <field name="VAR">stake</field>
+                              </block>
+                            </value>
+                            <value name="B">
+                              <block type="variables_get" id="multiplier">
                                 <field name="VAR">size</field>
                               </block>
                             </value>
