@@ -65,7 +65,9 @@
   text-align: center;
 }
 
-.statistics-section {
+.statistics-section,
+.account-balances-section,
+.copy-trading-list-section {
   margin-bottom: 2rem;
   padding: 1.5rem;
   background: #f8f9fa;
@@ -78,7 +80,9 @@
     font-weight: 600;
     margin: 0 0 1rem 0;
   }
+}
 
+.statistics-section {
   .stats-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
@@ -129,6 +133,212 @@
       }
     }
   }
+}
+
+// Account Balances Section
+.account-balances-section {
+  .total-balance {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 1rem 1.5rem;
+    border-radius: 10px;
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+
+    .balance-value {
+      font-size: 1.3rem;
+      font-weight: 700;
+    }
+  }
+
+  .balances-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+  }
+
+  .balance-item {
+    background: #ffffff;
+    padding: 1rem;
+    border-radius: 8px;
+    border: 1px solid #e9ecef;
+    transition: all 0.3s ease;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .balance-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+
+      .account-id {
+        font-weight: 600;
+        color: #2c3e50;
+      }
+
+      .account-type {
+        padding: 0.25rem 0.5rem;
+        border-radius: 12px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+
+        &.real {
+          background: #d4edda;
+          color: #155724;
+        }
+
+        &.virtual {
+          background: #fff3cd;
+          color: #856404;
+        }
+      }
+    }
+
+    .balance-amount {
+      display: flex;
+      align-items: baseline;
+      gap: 0.5rem;
+
+      .amount {
+        font-size: 1.4rem;
+        font-weight: 700;
+        color: #28a745;
+      }
+
+      .currency {
+        font-size: 0.9rem;
+        color: #6c757d;
+        font-weight: 500;
+      }
+    }
+  }
+}
+
+// Token Section Enhancements
+.token-section {
+  .token-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+
+    h3 {
+      margin: 0;
+    }
+
+    .sync-btn {
+      background: #17a2b8;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+
+      &:hover:not(:disabled) {
+        background: #138496;
+        transform: translateY(-1px);
+      }
+
+      &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+
+      &.syncing {
+        animation: spin 1s linear infinite;
+      }
+    }
+  }
+
+  .token-item {
+    .token-info {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+
+      .token-status {
+        font-size: 0.8rem;
+        color: #28a745;
+        font-weight: 500;
+      }
+    }
+  }
+}
+
+// Copy Trading List Section
+.copy-trading-list-section {
+  .ct-list-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1rem;
+  }
+
+  .ct-list-item {
+    background: #ffffff;
+    padding: 1rem;
+    border-radius: 8px;
+    border: 1px solid #e9ecef;
+    transition: all 0.3s ease;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .ct-item-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+
+      .ct-account-id {
+        font-weight: 600;
+        color: #2c3e50;
+      }
+
+      .ct-status {
+        font-size: 0.8rem;
+        font-weight: 600;
+
+        &.active {
+          color: #28a745;
+        }
+
+        &.inactive {
+          color: #dc3545;
+        }
+      }
+    }
+
+    .ct-balance {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #28a745;
+      margin-bottom: 0.5rem;
+    }
+
+    .ct-created {
+      font-size: 0.8rem;
+      color: #6c757d;
+    }
+  }
+}
+
+// Animations
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
 .demo-copy-section,
@@ -307,19 +517,105 @@
   margin-top: 0.5rem;
 }
 
-.tutorial-btn {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  border: none;
-  padding: 12px 30px;
-  border-radius: 8px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
+.tutorial-section,
+.trading-status-section {
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background: #f8f9fa;
+  border-radius: 10px;
+  border: 1px solid #e9ecef;
 
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+  h3 {
+    color: #2c3e50;
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin: 0 0 0.5rem 0;
+  }
+
+  p {
+    color: #6c757d;
+    margin: 0 0 1rem 0;
+    font-size: 0.95rem;
+  }
+}
+
+.tutorial-section {
+  .tutorial-buttons {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .tutorial-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    &.secondary {
+      background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+
+      &:hover {
+        box-shadow: 0 4px 15px rgba(40, 167, 69, 0.4);
+      }
+    }
+  }
+}
+
+.trading-status-section {
+  .status-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+  }
+
+  .status-item {
+    background: #ffffff;
+    padding: 1rem;
+    border-radius: 8px;
+    border: 1px solid #e9ecef;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.3s ease;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .status-label {
+      font-weight: 500;
+      color: #2c3e50;
+    }
+
+    .status-value {
+      font-weight: 600;
+
+      &.connected {
+        color: #28a745;
+      }
+
+      &.active {
+        color: #28a745;
+      }
+
+      &.inactive {
+        color: #dc3545;
+      }
+    }
   }
 }
 
