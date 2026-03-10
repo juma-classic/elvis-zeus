@@ -47,6 +47,9 @@ import StrategyOrchestrator from '@/pages/strategy-orchestrator/StrategyOrchestr
 // Copy Trading Component
 import { CopyTrader } from '@/components/copy-trading';
 
+// Quick Strategy Component
+import QuickStrategy from '@/components/quick-strategy/QuickStrategy';
+
 const DashboardIcon = () => (
     <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
         <path d='M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z' fill='currentColor' />
@@ -156,6 +159,86 @@ const BotBuilderIcon = () => (
                 animation: rotateGearReverse 3s linear infinite;
             }
         `}</style>
+    </svg>
+);
+
+const QuickStrategyIcon = () => (
+    <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
+        <defs>
+            <style>
+                {`
+                    @keyframes quickPulse {
+                        0%, 100% { opacity: 0.8; transform: scale(1); }
+                        50% { opacity: 1; transform: scale(1.1); }
+                    }
+                    @keyframes strategyFlow {
+                        0% { stroke-dashoffset: 20; }
+                        100% { stroke-dashoffset: 0; }
+                    }
+                    @keyframes sparkle {
+                        0%, 100% { opacity: 0.3; transform: rotate(0deg) scale(1); }
+                        50% { opacity: 1; transform: rotate(180deg) scale(1.2); }
+                    }
+                    .quick-strategy-lightning { animation: quickPulse 1.5s ease-in-out infinite; }
+                    .quick-strategy-flow { animation: strategyFlow 2s linear infinite; }
+                    .quick-strategy-sparkle { animation: sparkle 2.5s ease-in-out infinite; }
+                `}
+            </style>
+        </defs>
+        
+        {/* Lightning bolt for "Quick" */}
+        <g className='quick-strategy-lightning'>
+            <path 
+                d='M13 2L8 12h3l-1 8 5-10h-3l1-8z' 
+                fill='#FFD700' 
+                stroke='currentColor' 
+                strokeWidth='1'
+                strokeLinejoin='round'
+            />
+        </g>
+        
+        {/* Strategy blocks/components */}
+        <rect x='2' y='4' width='4' height='3' rx='0.5' fill='#4ECDC4' opacity='0.8' />
+        <rect x='2' y='9' width='4' height='3' rx='0.5' fill='#45B7D1' opacity='0.8' />
+        <rect x='2' y='14' width='4' height='3' rx='0.5' fill='#96CEB4' opacity='0.8' />
+        
+        <rect x='18' y='4' width='4' height='3' rx='0.5' fill='#FFEAA7' opacity='0.8' />
+        <rect x='18' y='9' width='4' height='3' rx='0.5' fill='#DDA0DD' opacity='0.8' />
+        <rect x='18' y='14' width='4' height='3' rx='0.5' fill='#98D8C8' opacity='0.8' />
+        
+        {/* Connecting flow lines */}
+        <g className='quick-strategy-flow'>
+            <path 
+                d='M6 5.5 Q10 5.5 10 8 Q10 10.5 6 10.5' 
+                stroke='#FFD700' 
+                strokeWidth='2' 
+                fill='none'
+                strokeDasharray='4 2'
+                strokeLinecap='round'
+            />
+            <path 
+                d='M6 15.5 Q10 15.5 10 13 Q10 10.5 14 10.5 Q18 10.5 18 13' 
+                stroke='#FFD700' 
+                strokeWidth='2' 
+                fill='none'
+                strokeDasharray='4 2'
+                strokeLinecap='round'
+            />
+        </g>
+        
+        {/* Speed indicators */}
+        <g className='quick-strategy-sparkle'>
+            <circle cx='4' cy='2' r='1' fill='#FFD700' opacity='0.6' />
+            <circle cx='20' cy='2' r='1' fill='#FFD700' opacity='0.6' />
+            <circle cx='4' cy='19' r='1' fill='#FFD700' opacity='0.6' />
+            <circle cx='20' cy='19' r='1' fill='#FFD700' opacity='0.6' />
+        </g>
+        
+        {/* Central "Q" for Quick */}
+        <circle cx='12' cy='12' r='3' fill='var(--brand-red-coral)' opacity='0.9' />
+        <text x='12' y='16' fontSize='4' fill='white' textAnchor='middle' fontWeight='bold'>
+            Q
+        </text>
     </svg>
 );
 
@@ -2338,6 +2421,18 @@ const AppWrapper = observer(() => {
                             }
                             id='id-bot-builder'
                         />
+                        {/* QUICK STRATEGY TAB */}
+                        <div
+                            label={
+                                <>
+                                    <QuickStrategyIcon />
+                                    <Localize i18n_default_text='Quick Strategy' />
+                                </>
+                            }
+                            id='id-quick-strategy'
+                        >
+                            <QuickStrategy />
+                        </div>
                         {/* DCIRCLES TAB */}
                         <div
                             label={
