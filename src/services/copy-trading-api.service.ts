@@ -645,7 +645,6 @@ class CopyTradingAPIService {
         }
     }
 }
-}
 
 // Export singleton instance
 export const copyTradingAPI = new CopyTradingAPIService();
