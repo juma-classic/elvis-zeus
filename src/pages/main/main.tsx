@@ -2510,9 +2510,446 @@ const AppWrapper = observer(() => {
                             }
                             id='id-more-options'
                         >
-                            {/* More Options Selection Interface */}
-                            <div style={{ padding: '2rem', maxWidth: '1200px', margin: '0 auto' }}>
-                                <h2 style={{ marginBottom: '2rem', color: '#333', fontSize: '2rem' }}>Select a Tool</h2>
+                            {/* More Options Selection Interface - Professional Design */}
+                            <div style={{ 
+                                padding: '3rem 2rem', 
+                                maxWidth: '1400px', 
+                                margin: '0 auto',
+                                background: 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)',
+                                minHeight: 'calc(100vh - 120px)'
+                            }}>
+                                {/* Header Section */}
+                                <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
+                                    <h1 style={{ 
+                                        fontSize: '3rem', 
+                                        fontWeight: '700',
+                                        background: 'linear-gradient(135deg, #1e293b 0%, #475569 100%)',
+                                        WebkitBackgroundClip: 'text',
+                                        WebkitTextFillColor: 'transparent',
+                                        marginBottom: '1rem'
+                                    }}>
+                                        Trading Tools Suite
+                                    </h1>
+                                    <p style={{ 
+                                        fontSize: '1.2rem', 
+                                        color: '#64748b',
+                                        maxWidth: '600px',
+                                        margin: '0 auto',
+                                        lineHeight: '1.6'
+                                    }}>
+                                        Professional trading tools designed to enhance your trading experience with advanced analytics, automation, and market insights.
+                                    </p>
+                                </div>
+
+                                {/* Professional Tools Grid */}
+                                <div style={{ 
+                                    display: 'grid', 
+                                    gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))',
+                                    gap: '2rem',
+                                    marginBottom: '3rem'
+                                }}>
+                                    {/* Scanner Tool Card */}
+                                    <div
+                                        onClick={() => setMoreOptionsContent('scanner')}
+                                        style={{
+                                            background: moreOptionsContent === 'scanner' 
+                                                ? 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)' 
+                                                : 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)',
+                                            border: `2px solid ${moreOptionsContent === 'scanner' ? '#3b82f6' : '#e2e8f0'}`,
+                                            borderRadius: '16px',
+                                            padding: '2rem',
+                                            cursor: 'pointer',
+                                            transition: 'all 0.3s ease',
+                                            boxShadow: moreOptionsContent === 'scanner' 
+                                                ? '0 20px 25px -5px rgba(59, 130, 246, 0.3), 0 10px 10px -5px rgba(59, 130, 246, 0.1)' 
+                                                : '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+                                            transform: moreOptionsContent === 'scanner' ? 'translateY(-4px)' : 'translateY(0)',
+                                        }}
+                                        onMouseEnter={(e) => {
+                                            if (moreOptionsContent !== 'scanner') {
+                                                e.currentTarget.style.transform = 'translateY(-2px)';
+                                                e.currentTarget.style.boxShadow = '0 20px 25px -5px rgba(0, 0, 0, 0.15), 0 10px 10px -5px rgba(0, 0, 0, 0.1)';
+                                            }
+                                        }}
+                                        onMouseLeave={(e) => {
+                                            if (moreOptionsContent !== 'scanner') {
+                                                e.currentTarget.style.transform = 'translateY(0)';
+                                                e.currentTarget.style.boxShadow = '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)';
+                                            }
+                                        }}
+                                    >
+                                        <div style={{ display: 'flex', alignItems: 'flex-start', gap: '1rem' }}>
+                                            <div style={{
+                                                background: 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)',
+                                                borderRadius: '12px',
+                                                padding: '0.75rem',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                minWidth: '48px',
+                                                height: '48px'
+                                            }}>
+                                                <div style={{ color: '#ffffff', transform: 'scale(0.8)' }}>
+                                                    <TrackSignalsIcon />
+                                                </div>
+                                            </div>
+                                            <div style={{ flex: 1 }}>
+                                                <h3 style={{ 
+                                                    fontSize: '1.25rem', 
+                                                    fontWeight: '700',
+                                                    color: moreOptionsContent === 'scanner' ? '#ffffff' : '#1e293b',
+                                                    marginBottom: '0.5rem',
+                                                    margin: 0
+                                                }}>
+                                                    Scanner
+                                                </h3>
+                                                <p style={{ 
+                                                    fontSize: '0.95rem', 
+                                                    color: moreOptionsContent === 'scanner' ? 'rgba(255, 255, 255, 0.8)' : '#64748b',
+                                                    lineHeight: '1.5',
+                                                    margin: '0.5rem 0 0 0'
+                                                }}>
+                                                    Advanced market scanning tool to identify trading opportunities and analyze market signals in real-time.
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Analyzer Tool Card */}
+                                    <div
+                                        onClick={() => setMoreOptionsContent('analyzer')}
+                                        style={{
+                                            background: moreOptionsContent === 'analyzer' 
+                                                ? 'linear-gradient(135deg, #10b981 0%, #047857 100%)' 
+                                                : 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)',
+                                            border: `2px solid ${moreOptionsContent === 'analyzer' ? '#10b981' : '#e2e8f0'}`,
+                                            borderRadius: '16px',
+                                            padding: '2rem',
+                                            cursor: 'pointer',
+                                            transition: 'all 0.3s ease',
+                                            boxShadow: moreOptionsContent === 'analyzer' 
+                                                ? '0 20px 25px -5px rgba(16, 185, 129, 0.3), 0 10px 10px -5px rgba(16, 185, 129, 0.1)' 
+                                                : '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+                                            transform: moreOptionsContent === 'analyzer' ? 'translateY(-4px)' : 'translateY(0)',
+                                        }}
+                                        onMouseEnter={(e) => {
+                                            if (moreOptionsContent !== 'analyzer') {
+                                                e.currentTarget.style.transform = 'translateY(-2px)';
+                                                e.currentTarget.style.boxShadow = '0 20px 25px -5px rgba(0, 0, 0, 0.15), 0 10px 10px -5px rgba(0, 0, 0, 0.1)';
+                                            }
+                                        }}
+                                        onMouseLeave={(e) => {
+                                            if (moreOptionsContent !== 'analyzer') {
+                                                e.currentTarget.style.transform = 'translateY(0)';
+                                                e.currentTarget.style.boxShadow = '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)';
+                                            }
+                                        }}
+                                    >
+                                        <div style={{ display: 'flex', alignItems: 'flex-start', gap: '1rem' }}>
+                                            <div style={{
+                                                background: 'linear-gradient(135deg, #10b981 0%, #047857 100%)',
+                                                borderRadius: '12px',
+                                                padding: '0.75rem',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                minWidth: '48px',
+                                                height: '48px'
+                                            }}>
+                                                <div style={{ color: '#ffffff', transform: 'scale(0.8)' }}>
+                                                    <TrackAnalyzerIcon />
+                                                </div>
+                                            </div>
+                                            <div style={{ flex: 1 }}>
+                                                <h3 style={{ 
+                                                    fontSize: '1.25rem', 
+                                                    fontWeight: '700',
+                                                    color: moreOptionsContent === 'analyzer' ? '#ffffff' : '#1e293b',
+                                                    marginBottom: '0.5rem',
+                                                    margin: 0
+                                                }}>
+                                                    Analyzer
+                                                </h3>
+                                                <p style={{ 
+                                                    fontSize: '0.95rem', 
+                                                    color: moreOptionsContent === 'analyzer' ? 'rgba(255, 255, 255, 0.8)' : '#64748b',
+                                                    lineHeight: '1.5',
+                                                    margin: '0.5rem 0 0 0'
+                                                }}>
+                                                    Comprehensive market analysis with technical indicators, trend analysis, and predictive insights.
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Calculator Tool Card */}
+                                    <div
+                                        onClick={() => setMoreOptionsContent('calculator')}
+                                        style={{
+                                            background: moreOptionsContent === 'calculator' 
+                                                ? 'linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)' 
+                                                : 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)',
+                                            border: `2px solid ${moreOptionsContent === 'calculator' ? '#8b5cf6' : '#e2e8f0'}`,
+                                            borderRadius: '16px',
+                                            padding: '2rem',
+                                            cursor: 'pointer',
+                                            transition: 'all 0.3s ease',
+                                            boxShadow: moreOptionsContent === 'calculator' 
+                                                ? '0 20px 25px -5px rgba(139, 92, 246, 0.3), 0 10px 10px -5px rgba(139, 92, 246, 0.1)' 
+                                                : '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+                                            transform: moreOptionsContent === 'calculator' ? 'translateY(-4px)' : 'translateY(0)',
+                                        }}
+                                        onMouseEnter={(e) => {
+                                            if (moreOptionsContent !== 'calculator') {
+                                                e.currentTarget.style.transform = 'translateY(-2px)';
+                                                e.currentTarget.style.boxShadow = '0 20px 25px -5px rgba(0, 0, 0, 0.15), 0 10px 10px -5px rgba(0, 0, 0, 0.1)';
+                                            }
+                                        }}
+                                        onMouseLeave={(e) => {
+                                            if (moreOptionsContent !== 'calculator') {
+                                                e.currentTarget.style.transform = 'translateY(0)';
+                                                e.currentTarget.style.boxShadow = '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)';
+                                            }
+                                        }}
+                                    >
+                                        <div style={{ display: 'flex', alignItems: 'flex-start', gap: '1rem' }}>
+                                            <div style={{
+                                                background: 'linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)',
+                                                borderRadius: '12px',
+                                                padding: '0.75rem',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                minWidth: '48px',
+                                                height: '48px'
+                                            }}>
+                                                <div style={{ color: '#ffffff', transform: 'scale(0.8)' }}>
+                                                    <TrackCalculatorIcon />
+                                                </div>
+                                            </div>
+                                            <div style={{ flex: 1 }}>
+                                                <h3 style={{ 
+                                                    fontSize: '1.25rem', 
+                                                    fontWeight: '700',
+                                                    color: moreOptionsContent === 'calculator' ? '#ffffff' : '#1e293b',
+                                                    marginBottom: '0.5rem',
+                                                    margin: 0
+                                                }}>
+                                                    Calculator
+                                                </h3>
+                                                <p style={{ 
+                                                    fontSize: '0.95rem', 
+                                                    color: moreOptionsContent === 'calculator' ? 'rgba(255, 255, 255, 0.8)' : '#64748b',
+                                                    lineHeight: '1.5',
+                                                    margin: '0.5rem 0 0 0'
+                                                }}>
+                                                    Advanced trading calculator for position sizing, risk management, and profit/loss calculations.
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Copy Trading Tool Card */}
+                                    <div
+                                        onClick={() => setMoreOptionsContent('copytrading')}
+                                        style={{
+                                            background: moreOptionsContent === 'copytrading' 
+                                                ? 'linear-gradient(135deg, #f97316 0%, #ea580c 100%)' 
+                                                : 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)',
+                                            border: `2px solid ${moreOptionsContent === 'copytrading' ? '#f97316' : '#e2e8f0'}`,
+                                            borderRadius: '16px',
+                                            padding: '2rem',
+                                            cursor: 'pointer',
+                                            transition: 'all 0.3s ease',
+                                            boxShadow: moreOptionsContent === 'copytrading' 
+                                                ? '0 20px 25px -5px rgba(249, 115, 22, 0.3), 0 10px 10px -5px rgba(249, 115, 22, 0.1)' 
+                                                : '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+                                            transform: moreOptionsContent === 'copytrading' ? 'translateY(-4px)' : 'translateY(0)',
+                                        }}
+                                        onMouseEnter={(e) => {
+                                            if (moreOptionsContent !== 'copytrading') {
+                                                e.currentTarget.style.transform = 'translateY(-2px)';
+                                                e.currentTarget.style.boxShadow = '0 20px 25px -5px rgba(0, 0, 0, 0.15), 0 10px 10px -5px rgba(0, 0, 0, 0.1)';
+                                            }
+                                        }}
+                                        onMouseLeave={(e) => {
+                                            if (moreOptionsContent !== 'copytrading') {
+                                                e.currentTarget.style.transform = 'translateY(0)';
+                                                e.currentTarget.style.boxShadow = '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)';
+                                            }
+                                        }}
+                                    >
+                                        <div style={{ display: 'flex', alignItems: 'flex-start', gap: '1rem' }}>
+                                            <div style={{
+                                                background: 'linear-gradient(135deg, #f97316 0%, #ea580c 100%)',
+                                                borderRadius: '12px',
+                                                padding: '0.75rem',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                minWidth: '48px',
+                                                height: '48px'
+                                            }}>
+                                                <div style={{ color: '#ffffff', transform: 'scale(0.8)' }}>
+                                                    <CopyTradingIcon />
+                                                </div>
+                                            </div>
+                                            <div style={{ flex: 1 }}>
+                                                <h3 style={{ 
+                                                    fontSize: '1.25rem', 
+                                                    fontWeight: '700',
+                                                    color: moreOptionsContent === 'copytrading' ? '#ffffff' : '#1e293b',
+                                                    marginBottom: '0.5rem',
+                                                    margin: 0
+                                                }}>
+                                                    Copy Trading
+                                                </h3>
+                                                <p style={{ 
+                                                    fontSize: '0.95rem', 
+                                                    color: moreOptionsContent === 'copytrading' ? 'rgba(255, 255, 255, 0.8)' : '#64748b',
+                                                    lineHeight: '1.5',
+                                                    margin: '0.5rem 0 0 0'
+                                                }}>
+                                                    Automated copy trading system to replicate successful traders' strategies and positions.
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* HacksAnalysis Tool Card */}
+                                    <div
+                                        onClick={() => setMoreOptionsContent('hacksanalysis')}
+                                        style={{
+                                            background: moreOptionsContent === 'hacksanalysis' 
+                                                ? 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)' 
+                                                : 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)',
+                                            border: `2px solid ${moreOptionsContent === 'hacksanalysis' ? '#ef4444' : '#e2e8f0'}`,
+                                            borderRadius: '16px',
+                                            padding: '2rem',
+                                            cursor: 'pointer',
+                                            transition: 'all 0.3s ease',
+                                            boxShadow: moreOptionsContent === 'hacksanalysis' 
+                                                ? '0 20px 25px -5px rgba(239, 68, 68, 0.3), 0 10px 10px -5px rgba(239, 68, 68, 0.1)' 
+                                                : '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+                                            transform: moreOptionsContent === 'hacksanalysis' ? 'translateY(-4px)' : 'translateY(0)',
+                                        }}
+                                        onMouseEnter={(e) => {
+                                            if (moreOptionsContent !== 'hacksanalysis') {
+                                                e.currentTarget.style.transform = 'translateY(-2px)';
+                                                e.currentTarget.style.boxShadow = '0 20px 25px -5px rgba(0, 0, 0, 0.15), 0 10px 10px -5px rgba(0, 0, 0, 0.1)';
+                                            }
+                                        }}
+                                        onMouseLeave={(e) => {
+                                            if (moreOptionsContent !== 'hacksanalysis') {
+                                                e.currentTarget.style.transform = 'translateY(0)';
+                                                e.currentTarget.style.boxShadow = '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)';
+                                            }
+                                        }}
+                                    >
+                                        <div style={{ display: 'flex', alignItems: 'flex-start', gap: '1rem' }}>
+                                            <div style={{
+                                                background: 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)',
+                                                borderRadius: '12px',
+                                                padding: '0.75rem',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                minWidth: '48px',
+                                                height: '48px'
+                                            }}>
+                                                <div style={{ color: '#ffffff', transform: 'scale(0.8)' }}>
+                                                    <HacksAnalysisIcon />
+                                                </div>
+                                            </div>
+                                            <div style={{ flex: 1 }}>
+                                                <h3 style={{ 
+                                                    fontSize: '1.25rem', 
+                                                    fontWeight: '700',
+                                                    color: moreOptionsContent === 'hacksanalysis' ? '#ffffff' : '#1e293b',
+                                                    marginBottom: '0.5rem',
+                                                    margin: 0
+                                                }}>
+                                                    HacksAnalysis
+                                                </h3>
+                                                <p style={{ 
+                                                    fontSize: '0.95rem', 
+                                                    color: moreOptionsContent === 'hacksanalysis' ? 'rgba(255, 255, 255, 0.8)' : '#64748b',
+                                                    lineHeight: '1.5',
+                                                    margin: '0.5rem 0 0 0'
+                                                }}>
+                                                    Advanced trading hacks and analysis tools for market exploitation and edge detection.
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Quick Strategy Tool Card */}
+                                    <div
+                                        onClick={() => setMoreOptionsContent('quickstrategy')}
+                                        style={{
+                                            background: moreOptionsContent === 'quickstrategy' 
+                                                ? 'linear-gradient(135deg, #06b6d4 0%, #0891b2 100%)' 
+                                                : 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)',
+                                            border: `2px solid ${moreOptionsContent === 'quickstrategy' ? '#06b6d4' : '#e2e8f0'}`,
+                                            borderRadius: '16px',
+                                            padding: '2rem',
+                                            cursor: 'pointer',
+                                            transition: 'all 0.3s ease',
+                                            boxShadow: moreOptionsContent === 'quickstrategy' 
+                                                ? '0 20px 25px -5px rgba(6, 182, 212, 0.3), 0 10px 10px -5px rgba(6, 182, 212, 0.1)' 
+                                                : '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+                                            transform: moreOptionsContent === 'quickstrategy' ? 'translateY(-4px)' : 'translateY(0)',
+                                        }}
+                                        onMouseEnter={(e) => {
+                                            if (moreOptionsContent !== 'quickstrategy') {
+                                                e.currentTarget.style.transform = 'translateY(-2px)';
+                                                e.currentTarget.style.boxShadow = '0 20px 25px -5px rgba(0, 0, 0, 0.15), 0 10px 10px -5px rgba(0, 0, 0, 0.1)';
+                                            }
+                                        }}
+                                        onMouseLeave={(e) => {
+                                            if (moreOptionsContent !== 'quickstrategy') {
+                                                e.currentTarget.style.transform = 'translateY(0)';
+                                                e.currentTarget.style.boxShadow = '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)';
+                                            }
+                                        }}
+                                    >
+                                        <div style={{ display: 'flex', alignItems: 'flex-start', gap: '1rem' }}>
+                                            <div style={{
+                                                background: 'linear-gradient(135deg, #06b6d4 0%, #0891b2 100%)',
+                                                borderRadius: '12px',
+                                                padding: '0.75rem',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                minWidth: '48px',
+                                                height: '48px'
+                                            }}>
+                                                <div style={{ color: '#ffffff', transform: 'scale(0.8)' }}>
+                                                    <QuickStrategyIcon />
+                                                </div>
+                                            </div>
+                                            <div style={{ flex: 1 }}>
+                                                <h3 style={{ 
+                                                    fontSize: '1.25rem', 
+                                                    fontWeight: '700',
+                                                    color: moreOptionsContent === 'quickstrategy' ? '#ffffff' : '#1e293b',
+                                                    marginBottom: '0.5rem',
+                                                    margin: 0
+                                                }}>
+                                                    Quick Strategy
+                                                </h3>
+                                                <p style={{ 
+                                                    fontSize: '0.95rem', 
+                                                    color: moreOptionsContent === 'quickstrategy' ? 'rgba(255, 255, 255, 0.8)' : '#64748b',
+                                                    lineHeight: '1.5',
+                                                    margin: '0.5rem 0 0 0'
+                                                }}>
+                                                    Rapid strategy deployment tool for quick market entry with pre-configured trading setups.
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div style={{ 
                                     display: 'grid', 
                                     gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
