@@ -2513,11 +2513,14 @@ const AppWrapper = observer(() => {
                             {/* More Options Selection Interface - Professional Design */}
                             <div style={{ 
                                 padding: '3rem 2rem', 
-                                maxWidth: '1400px', 
-                                margin: '0 auto',
+                                width: '100%',
                                 background: 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)',
-                                minHeight: 'calc(100vh - 120px)'
+                                minHeight: '100vh'
                             }}>
+                                <div style={{
+                                    maxWidth: '1400px',
+                                    margin: '0 auto'
+                                }}>
                                 {/* Header Section */}
                                 <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
                                     <h1 style={{ 
@@ -2544,8 +2547,8 @@ const AppWrapper = observer(() => {
                                 {/* Professional Tools Grid */}
                                 <div style={{ 
                                     display: 'grid', 
-                                    gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))',
-                                    gap: '2rem',
+                                    gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))',
+                                    gap: '1rem',
                                     marginBottom: '3rem'
                                 }}>
                                     {/* Scanner Tool Card */}
@@ -2556,60 +2559,59 @@ const AppWrapper = observer(() => {
                                                 ? 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)' 
                                                 : 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)',
                                             border: `2px solid ${moreOptionsContent === 'scanner' ? '#3b82f6' : '#e2e8f0'}`,
-                                            borderRadius: '16px',
-                                            padding: '2rem',
+                                            borderRadius: '12px',
+                                            padding: '1rem 1.5rem',
                                             cursor: 'pointer',
                                             transition: 'all 0.3s ease',
                                             boxShadow: moreOptionsContent === 'scanner' 
-                                                ? '0 20px 25px -5px rgba(59, 130, 246, 0.3), 0 10px 10px -5px rgba(59, 130, 246, 0.1)' 
-                                                : '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
-                                            transform: moreOptionsContent === 'scanner' ? 'translateY(-4px)' : 'translateY(0)',
+                                                ? '0 8px 25px -5px rgba(59, 130, 246, 0.3)' 
+                                                : '0 4px 15px -3px rgba(0, 0, 0, 0.1)',
+                                            transform: moreOptionsContent === 'scanner' ? 'translateY(-2px)' : 'translateY(0)',
                                         }}
                                         onMouseEnter={(e) => {
                                             if (moreOptionsContent !== 'scanner') {
-                                                e.currentTarget.style.transform = 'translateY(-2px)';
-                                                e.currentTarget.style.boxShadow = '0 20px 25px -5px rgba(0, 0, 0, 0.15), 0 10px 10px -5px rgba(0, 0, 0, 0.1)';
+                                                e.currentTarget.style.transform = 'translateY(-1px)';
+                                                e.currentTarget.style.boxShadow = '0 8px 25px -5px rgba(0, 0, 0, 0.15)';
                                             }
                                         }}
                                         onMouseLeave={(e) => {
                                             if (moreOptionsContent !== 'scanner') {
                                                 e.currentTarget.style.transform = 'translateY(0)';
-                                                e.currentTarget.style.boxShadow = '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)';
+                                                e.currentTarget.style.boxShadow = '0 4px 15px -3px rgba(0, 0, 0, 0.1)';
                                             }
                                         }}
                                     >
-                                        <div style={{ display: 'flex', alignItems: 'flex-start', gap: '1rem' }}>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
                                             <div style={{
                                                 background: 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)',
-                                                borderRadius: '12px',
-                                                padding: '0.75rem',
+                                                borderRadius: '8px',
+                                                padding: '0.5rem',
                                                 display: 'flex',
                                                 alignItems: 'center',
                                                 justifyContent: 'center',
-                                                minWidth: '48px',
-                                                height: '48px'
+                                                minWidth: '40px',
+                                                height: '40px'
                                             }}>
-                                                <div style={{ color: '#ffffff', transform: 'scale(0.8)' }}>
+                                                <div style={{ color: '#ffffff', transform: 'scale(0.7)' }}>
                                                     <TrackSignalsIcon />
                                                 </div>
                                             </div>
                                             <div style={{ flex: 1 }}>
                                                 <h3 style={{ 
-                                                    fontSize: '1.25rem', 
-                                                    fontWeight: '700',
+                                                    fontSize: '1.1rem', 
+                                                    fontWeight: '600',
                                                     color: moreOptionsContent === 'scanner' ? '#ffffff' : '#1e293b',
-                                                    marginBottom: '0.5rem',
-                                                    margin: 0
+                                                    margin: '0 0 0.25rem 0'
                                                 }}>
                                                     Scanner
                                                 </h3>
                                                 <p style={{ 
-                                                    fontSize: '0.95rem', 
+                                                    fontSize: '0.85rem', 
                                                     color: moreOptionsContent === 'scanner' ? 'rgba(255, 255, 255, 0.8)' : '#64748b',
-                                                    lineHeight: '1.5',
-                                                    margin: '0.5rem 0 0 0'
+                                                    lineHeight: '1.4',
+                                                    margin: 0
                                                 }}>
-                                                    Advanced market scanning tool to identify trading opportunities and analyze market signals in real-time.
+                                                    Advanced market scanning tool to identify trading opportunities in real-time.
                                                 </p>
                                             </div>
                                         </div>
@@ -2623,60 +2625,59 @@ const AppWrapper = observer(() => {
                                                 ? 'linear-gradient(135deg, #10b981 0%, #047857 100%)' 
                                                 : 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)',
                                             border: `2px solid ${moreOptionsContent === 'analyzer' ? '#10b981' : '#e2e8f0'}`,
-                                            borderRadius: '16px',
-                                            padding: '2rem',
+                                            borderRadius: '12px',
+                                            padding: '1rem 1.5rem',
                                             cursor: 'pointer',
                                             transition: 'all 0.3s ease',
                                             boxShadow: moreOptionsContent === 'analyzer' 
-                                                ? '0 20px 25px -5px rgba(16, 185, 129, 0.3), 0 10px 10px -5px rgba(16, 185, 129, 0.1)' 
-                                                : '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
-                                            transform: moreOptionsContent === 'analyzer' ? 'translateY(-4px)' : 'translateY(0)',
+                                                ? '0 8px 25px -5px rgba(16, 185, 129, 0.3)' 
+                                                : '0 4px 15px -3px rgba(0, 0, 0, 0.1)',
+                                            transform: moreOptionsContent === 'analyzer' ? 'translateY(-2px)' : 'translateY(0)',
                                         }}
                                         onMouseEnter={(e) => {
                                             if (moreOptionsContent !== 'analyzer') {
-                                                e.currentTarget.style.transform = 'translateY(-2px)';
-                                                e.currentTarget.style.boxShadow = '0 20px 25px -5px rgba(0, 0, 0, 0.15), 0 10px 10px -5px rgba(0, 0, 0, 0.1)';
+                                                e.currentTarget.style.transform = 'translateY(-1px)';
+                                                e.currentTarget.style.boxShadow = '0 8px 25px -5px rgba(0, 0, 0, 0.15)';
                                             }
                                         }}
                                         onMouseLeave={(e) => {
                                             if (moreOptionsContent !== 'analyzer') {
                                                 e.currentTarget.style.transform = 'translateY(0)';
-                                                e.currentTarget.style.boxShadow = '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)';
+                                                e.currentTarget.style.boxShadow = '0 4px 15px -3px rgba(0, 0, 0, 0.1)';
                                             }
                                         }}
                                     >
-                                        <div style={{ display: 'flex', alignItems: 'flex-start', gap: '1rem' }}>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
                                             <div style={{
                                                 background: 'linear-gradient(135deg, #10b981 0%, #047857 100%)',
-                                                borderRadius: '12px',
-                                                padding: '0.75rem',
+                                                borderRadius: '8px',
+                                                padding: '0.5rem',
                                                 display: 'flex',
                                                 alignItems: 'center',
                                                 justifyContent: 'center',
-                                                minWidth: '48px',
-                                                height: '48px'
+                                                minWidth: '40px',
+                                                height: '40px'
                                             }}>
-                                                <div style={{ color: '#ffffff', transform: 'scale(0.8)' }}>
+                                                <div style={{ color: '#ffffff', transform: 'scale(0.7)' }}>
                                                     <TrackAnalyzerIcon />
                                                 </div>
                                             </div>
                                             <div style={{ flex: 1 }}>
                                                 <h3 style={{ 
-                                                    fontSize: '1.25rem', 
-                                                    fontWeight: '700',
+                                                    fontSize: '1.1rem', 
+                                                    fontWeight: '600',
                                                     color: moreOptionsContent === 'analyzer' ? '#ffffff' : '#1e293b',
-                                                    marginBottom: '0.5rem',
-                                                    margin: 0
+                                                    margin: '0 0 0.25rem 0'
                                                 }}>
                                                     Analyzer
                                                 </h3>
                                                 <p style={{ 
-                                                    fontSize: '0.95rem', 
+                                                    fontSize: '0.85rem', 
                                                     color: moreOptionsContent === 'analyzer' ? 'rgba(255, 255, 255, 0.8)' : '#64748b',
-                                                    lineHeight: '1.5',
-                                                    margin: '0.5rem 0 0 0'
+                                                    lineHeight: '1.4',
+                                                    margin: 0
                                                 }}>
-                                                    Comprehensive market analysis with technical indicators, trend analysis, and predictive insights.
+                                                    Comprehensive market analysis with technical indicators and predictive insights.
                                                 </p>
                                             </div>
                                         </div>
@@ -2690,60 +2691,59 @@ const AppWrapper = observer(() => {
                                                 ? 'linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)' 
                                                 : 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)',
                                             border: `2px solid ${moreOptionsContent === 'calculator' ? '#8b5cf6' : '#e2e8f0'}`,
-                                            borderRadius: '16px',
-                                            padding: '2rem',
+                                            borderRadius: '12px',
+                                            padding: '1rem 1.5rem',
                                             cursor: 'pointer',
                                             transition: 'all 0.3s ease',
                                             boxShadow: moreOptionsContent === 'calculator' 
-                                                ? '0 20px 25px -5px rgba(139, 92, 246, 0.3), 0 10px 10px -5px rgba(139, 92, 246, 0.1)' 
-                                                : '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
-                                            transform: moreOptionsContent === 'calculator' ? 'translateY(-4px)' : 'translateY(0)',
+                                                ? '0 8px 25px -5px rgba(139, 92, 246, 0.3)' 
+                                                : '0 4px 15px -3px rgba(0, 0, 0, 0.1)',
+                                            transform: moreOptionsContent === 'calculator' ? 'translateY(-2px)' : 'translateY(0)',
                                         }}
                                         onMouseEnter={(e) => {
                                             if (moreOptionsContent !== 'calculator') {
-                                                e.currentTarget.style.transform = 'translateY(-2px)';
-                                                e.currentTarget.style.boxShadow = '0 20px 25px -5px rgba(0, 0, 0, 0.15), 0 10px 10px -5px rgba(0, 0, 0, 0.1)';
+                                                e.currentTarget.style.transform = 'translateY(-1px)';
+                                                e.currentTarget.style.boxShadow = '0 8px 25px -5px rgba(0, 0, 0, 0.15)';
                                             }
                                         }}
                                         onMouseLeave={(e) => {
                                             if (moreOptionsContent !== 'calculator') {
                                                 e.currentTarget.style.transform = 'translateY(0)';
-                                                e.currentTarget.style.boxShadow = '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)';
+                                                e.currentTarget.style.boxShadow = '0 4px 15px -3px rgba(0, 0, 0, 0.1)';
                                             }
                                         }}
                                     >
-                                        <div style={{ display: 'flex', alignItems: 'flex-start', gap: '1rem' }}>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
                                             <div style={{
                                                 background: 'linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)',
-                                                borderRadius: '12px',
-                                                padding: '0.75rem',
+                                                borderRadius: '8px',
+                                                padding: '0.5rem',
                                                 display: 'flex',
                                                 alignItems: 'center',
                                                 justifyContent: 'center',
-                                                minWidth: '48px',
-                                                height: '48px'
+                                                minWidth: '40px',
+                                                height: '40px'
                                             }}>
-                                                <div style={{ color: '#ffffff', transform: 'scale(0.8)' }}>
+                                                <div style={{ color: '#ffffff', transform: 'scale(0.7)' }}>
                                                     <TrackCalculatorIcon />
                                                 </div>
                                             </div>
                                             <div style={{ flex: 1 }}>
                                                 <h3 style={{ 
-                                                    fontSize: '1.25rem', 
-                                                    fontWeight: '700',
+                                                    fontSize: '1.1rem', 
+                                                    fontWeight: '600',
                                                     color: moreOptionsContent === 'calculator' ? '#ffffff' : '#1e293b',
-                                                    marginBottom: '0.5rem',
-                                                    margin: 0
+                                                    margin: '0 0 0.25rem 0'
                                                 }}>
                                                     Calculator
                                                 </h3>
                                                 <p style={{ 
-                                                    fontSize: '0.95rem', 
+                                                    fontSize: '0.85rem', 
                                                     color: moreOptionsContent === 'calculator' ? 'rgba(255, 255, 255, 0.8)' : '#64748b',
-                                                    lineHeight: '1.5',
-                                                    margin: '0.5rem 0 0 0'
+                                                    lineHeight: '1.4',
+                                                    margin: 0
                                                 }}>
-                                                    Advanced trading calculator for position sizing, risk management, and profit/loss calculations.
+                                                    Advanced trading calculator for position sizing and risk management.
                                                 </p>
                                             </div>
                                         </div>
@@ -2757,60 +2757,59 @@ const AppWrapper = observer(() => {
                                                 ? 'linear-gradient(135deg, #f97316 0%, #ea580c 100%)' 
                                                 : 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)',
                                             border: `2px solid ${moreOptionsContent === 'copytrading' ? '#f97316' : '#e2e8f0'}`,
-                                            borderRadius: '16px',
-                                            padding: '2rem',
+                                            borderRadius: '12px',
+                                            padding: '1rem 1.5rem',
                                             cursor: 'pointer',
                                             transition: 'all 0.3s ease',
                                             boxShadow: moreOptionsContent === 'copytrading' 
-                                                ? '0 20px 25px -5px rgba(249, 115, 22, 0.3), 0 10px 10px -5px rgba(249, 115, 22, 0.1)' 
-                                                : '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
-                                            transform: moreOptionsContent === 'copytrading' ? 'translateY(-4px)' : 'translateY(0)',
+                                                ? '0 8px 25px -5px rgba(249, 115, 22, 0.3)' 
+                                                : '0 4px 15px -3px rgba(0, 0, 0, 0.1)',
+                                            transform: moreOptionsContent === 'copytrading' ? 'translateY(-2px)' : 'translateY(0)',
                                         }}
                                         onMouseEnter={(e) => {
                                             if (moreOptionsContent !== 'copytrading') {
-                                                e.currentTarget.style.transform = 'translateY(-2px)';
-                                                e.currentTarget.style.boxShadow = '0 20px 25px -5px rgba(0, 0, 0, 0.15), 0 10px 10px -5px rgba(0, 0, 0, 0.1)';
+                                                e.currentTarget.style.transform = 'translateY(-1px)';
+                                                e.currentTarget.style.boxShadow = '0 8px 25px -5px rgba(0, 0, 0, 0.15)';
                                             }
                                         }}
                                         onMouseLeave={(e) => {
                                             if (moreOptionsContent !== 'copytrading') {
                                                 e.currentTarget.style.transform = 'translateY(0)';
-                                                e.currentTarget.style.boxShadow = '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)';
+                                                e.currentTarget.style.boxShadow = '0 4px 15px -3px rgba(0, 0, 0, 0.1)';
                                             }
                                         }}
                                     >
-                                        <div style={{ display: 'flex', alignItems: 'flex-start', gap: '1rem' }}>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
                                             <div style={{
                                                 background: 'linear-gradient(135deg, #f97316 0%, #ea580c 100%)',
-                                                borderRadius: '12px',
-                                                padding: '0.75rem',
+                                                borderRadius: '8px',
+                                                padding: '0.5rem',
                                                 display: 'flex',
                                                 alignItems: 'center',
                                                 justifyContent: 'center',
-                                                minWidth: '48px',
-                                                height: '48px'
+                                                minWidth: '40px',
+                                                height: '40px'
                                             }}>
-                                                <div style={{ color: '#ffffff', transform: 'scale(0.8)' }}>
+                                                <div style={{ color: '#ffffff', transform: 'scale(0.7)' }}>
                                                     <CopyTradingIcon />
                                                 </div>
                                             </div>
                                             <div style={{ flex: 1 }}>
                                                 <h3 style={{ 
-                                                    fontSize: '1.25rem', 
-                                                    fontWeight: '700',
+                                                    fontSize: '1.1rem', 
+                                                    fontWeight: '600',
                                                     color: moreOptionsContent === 'copytrading' ? '#ffffff' : '#1e293b',
-                                                    marginBottom: '0.5rem',
-                                                    margin: 0
+                                                    margin: '0 0 0.25rem 0'
                                                 }}>
                                                     Copy Trading
                                                 </h3>
                                                 <p style={{ 
-                                                    fontSize: '0.95rem', 
+                                                    fontSize: '0.85rem', 
                                                     color: moreOptionsContent === 'copytrading' ? 'rgba(255, 255, 255, 0.8)' : '#64748b',
-                                                    lineHeight: '1.5',
-                                                    margin: '0.5rem 0 0 0'
+                                                    lineHeight: '1.4',
+                                                    margin: 0
                                                 }}>
-                                                    Automated copy trading system to replicate successful traders' strategies and positions.
+                                                    Automated copy trading system to replicate successful traders' strategies.
                                                 </p>
                                             </div>
                                         </div>
@@ -2824,60 +2823,59 @@ const AppWrapper = observer(() => {
                                                 ? 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)' 
                                                 : 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)',
                                             border: `2px solid ${moreOptionsContent === 'hacksanalysis' ? '#ef4444' : '#e2e8f0'}`,
-                                            borderRadius: '16px',
-                                            padding: '2rem',
+                                            borderRadius: '12px',
+                                            padding: '1rem 1.5rem',
                                             cursor: 'pointer',
                                             transition: 'all 0.3s ease',
                                             boxShadow: moreOptionsContent === 'hacksanalysis' 
-                                                ? '0 20px 25px -5px rgba(239, 68, 68, 0.3), 0 10px 10px -5px rgba(239, 68, 68, 0.1)' 
-                                                : '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
-                                            transform: moreOptionsContent === 'hacksanalysis' ? 'translateY(-4px)' : 'translateY(0)',
+                                                ? '0 8px 25px -5px rgba(239, 68, 68, 0.3)' 
+                                                : '0 4px 15px -3px rgba(0, 0, 0, 0.1)',
+                                            transform: moreOptionsContent === 'hacksanalysis' ? 'translateY(-2px)' : 'translateY(0)',
                                         }}
                                         onMouseEnter={(e) => {
                                             if (moreOptionsContent !== 'hacksanalysis') {
-                                                e.currentTarget.style.transform = 'translateY(-2px)';
-                                                e.currentTarget.style.boxShadow = '0 20px 25px -5px rgba(0, 0, 0, 0.15), 0 10px 10px -5px rgba(0, 0, 0, 0.1)';
+                                                e.currentTarget.style.transform = 'translateY(-1px)';
+                                                e.currentTarget.style.boxShadow = '0 8px 25px -5px rgba(0, 0, 0, 0.15)';
                                             }
                                         }}
                                         onMouseLeave={(e) => {
                                             if (moreOptionsContent !== 'hacksanalysis') {
                                                 e.currentTarget.style.transform = 'translateY(0)';
-                                                e.currentTarget.style.boxShadow = '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)';
+                                                e.currentTarget.style.boxShadow = '0 4px 15px -3px rgba(0, 0, 0, 0.1)';
                                             }
                                         }}
                                     >
-                                        <div style={{ display: 'flex', alignItems: 'flex-start', gap: '1rem' }}>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
                                             <div style={{
                                                 background: 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)',
-                                                borderRadius: '12px',
-                                                padding: '0.75rem',
+                                                borderRadius: '8px',
+                                                padding: '0.5rem',
                                                 display: 'flex',
                                                 alignItems: 'center',
                                                 justifyContent: 'center',
-                                                minWidth: '48px',
-                                                height: '48px'
+                                                minWidth: '40px',
+                                                height: '40px'
                                             }}>
-                                                <div style={{ color: '#ffffff', transform: 'scale(0.8)' }}>
+                                                <div style={{ color: '#ffffff', transform: 'scale(0.7)' }}>
                                                     <HacksAnalysisIcon />
                                                 </div>
                                             </div>
                                             <div style={{ flex: 1 }}>
                                                 <h3 style={{ 
-                                                    fontSize: '1.25rem', 
-                                                    fontWeight: '700',
+                                                    fontSize: '1.1rem', 
+                                                    fontWeight: '600',
                                                     color: moreOptionsContent === 'hacksanalysis' ? '#ffffff' : '#1e293b',
-                                                    marginBottom: '0.5rem',
-                                                    margin: 0
+                                                    margin: '0 0 0.25rem 0'
                                                 }}>
                                                     HacksAnalysis
                                                 </h3>
                                                 <p style={{ 
-                                                    fontSize: '0.95rem', 
+                                                    fontSize: '0.85rem', 
                                                     color: moreOptionsContent === 'hacksanalysis' ? 'rgba(255, 255, 255, 0.8)' : '#64748b',
-                                                    lineHeight: '1.5',
-                                                    margin: '0.5rem 0 0 0'
+                                                    lineHeight: '1.4',
+                                                    margin: 0
                                                 }}>
-                                                    Advanced trading hacks and analysis tools for market exploitation and edge detection.
+                                                    Advanced trading hacks and analysis tools for market exploitation.
                                                 </p>
                                             </div>
                                         </div>
@@ -2891,60 +2889,59 @@ const AppWrapper = observer(() => {
                                                 ? 'linear-gradient(135deg, #06b6d4 0%, #0891b2 100%)' 
                                                 : 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)',
                                             border: `2px solid ${moreOptionsContent === 'quickstrategy' ? '#06b6d4' : '#e2e8f0'}`,
-                                            borderRadius: '16px',
-                                            padding: '2rem',
+                                            borderRadius: '12px',
+                                            padding: '1rem 1.5rem',
                                             cursor: 'pointer',
                                             transition: 'all 0.3s ease',
                                             boxShadow: moreOptionsContent === 'quickstrategy' 
-                                                ? '0 20px 25px -5px rgba(6, 182, 212, 0.3), 0 10px 10px -5px rgba(6, 182, 212, 0.1)' 
-                                                : '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
-                                            transform: moreOptionsContent === 'quickstrategy' ? 'translateY(-4px)' : 'translateY(0)',
+                                                ? '0 8px 25px -5px rgba(6, 182, 212, 0.3)' 
+                                                : '0 4px 15px -3px rgba(0, 0, 0, 0.1)',
+                                            transform: moreOptionsContent === 'quickstrategy' ? 'translateY(-2px)' : 'translateY(0)',
                                         }}
                                         onMouseEnter={(e) => {
                                             if (moreOptionsContent !== 'quickstrategy') {
-                                                e.currentTarget.style.transform = 'translateY(-2px)';
-                                                e.currentTarget.style.boxShadow = '0 20px 25px -5px rgba(0, 0, 0, 0.15), 0 10px 10px -5px rgba(0, 0, 0, 0.1)';
+                                                e.currentTarget.style.transform = 'translateY(-1px)';
+                                                e.currentTarget.style.boxShadow = '0 8px 25px -5px rgba(0, 0, 0, 0.15)';
                                             }
                                         }}
                                         onMouseLeave={(e) => {
                                             if (moreOptionsContent !== 'quickstrategy') {
                                                 e.currentTarget.style.transform = 'translateY(0)';
-                                                e.currentTarget.style.boxShadow = '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)';
+                                                e.currentTarget.style.boxShadow = '0 4px 15px -3px rgba(0, 0, 0, 0.1)';
                                             }
                                         }}
                                     >
-                                        <div style={{ display: 'flex', alignItems: 'flex-start', gap: '1rem' }}>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
                                             <div style={{
                                                 background: 'linear-gradient(135deg, #06b6d4 0%, #0891b2 100%)',
-                                                borderRadius: '12px',
-                                                padding: '0.75rem',
+                                                borderRadius: '8px',
+                                                padding: '0.5rem',
                                                 display: 'flex',
                                                 alignItems: 'center',
                                                 justifyContent: 'center',
-                                                minWidth: '48px',
-                                                height: '48px'
+                                                minWidth: '40px',
+                                                height: '40px'
                                             }}>
-                                                <div style={{ color: '#ffffff', transform: 'scale(0.8)' }}>
+                                                <div style={{ color: '#ffffff', transform: 'scale(0.7)' }}>
                                                     <QuickStrategyIcon />
                                                 </div>
                                             </div>
                                             <div style={{ flex: 1 }}>
                                                 <h3 style={{ 
-                                                    fontSize: '1.25rem', 
-                                                    fontWeight: '700',
+                                                    fontSize: '1.1rem', 
+                                                    fontWeight: '600',
                                                     color: moreOptionsContent === 'quickstrategy' ? '#ffffff' : '#1e293b',
-                                                    marginBottom: '0.5rem',
-                                                    margin: 0
+                                                    margin: '0 0 0.25rem 0'
                                                 }}>
                                                     Quick Strategy
                                                 </h3>
                                                 <p style={{ 
-                                                    fontSize: '0.95rem', 
+                                                    fontSize: '0.85rem', 
                                                     color: moreOptionsContent === 'quickstrategy' ? 'rgba(255, 255, 255, 0.8)' : '#64748b',
-                                                    lineHeight: '1.5',
-                                                    margin: '0.5rem 0 0 0'
+                                                    lineHeight: '1.4',
+                                                    margin: 0
                                                 }}>
-                                                    Rapid strategy deployment tool for quick market entry with pre-configured trading setups.
+                                                    Rapid strategy deployment tool for quick market entry with pre-configured setups.
                                                 </p>
                                             </div>
                                         </div>
@@ -3011,6 +3008,7 @@ const AppWrapper = observer(() => {
                                             <QuickStrategy />
                                         </div>
                                     )}
+                                </div>
                                 </div>
                             </div>
                         </div>
