@@ -447,35 +447,6 @@ const StrategyOrchestratorIcon = () => (
     </svg>
 );
 
-const RichMotherIcon = () => (
-    <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
-        {/* Diamond shape */}
-        <path d='M12 2L16 8H8L12 2Z' fill='#ffd700' stroke='currentColor' strokeWidth='1.5' strokeLinejoin='round' />
-        <path
-            d='M8 8L12 22L16 8H8Z'
-            fill='#ffd700'
-            stroke='currentColor'
-            strokeWidth='1.5'
-            strokeLinejoin='round'
-            opacity='0.8'
-        />
-
-        {/* Inner diamond facets */}
-        <path d='M12 2L14 8L12 12L10 8L12 2Z' fill='#ffed4e' opacity='0.6' />
-        <path d='M12 12L10 8L8 8L12 22L12 12Z' fill='#e6c200' opacity='0.4' />
-        <path d='M12 12L14 8L16 8L12 22L12 12Z' fill='#e6c200' opacity='0.4' />
-
-        {/* Sparkle effects */}
-        <circle cx='6' cy='6' r='1' fill='#ffd700' opacity='0.8' />
-        <circle cx='18' cy='6' r='1' fill='#ffd700' opacity='0.8' />
-        <circle cx='4' cy='12' r='0.8' fill='#ffd700' opacity='0.6' />
-        <circle cx='20' cy='12' r='0.8' fill='#ffd700' opacity='0.6' />
-
-        {/* Crown elements */}
-        <path d='M10 4L11 6L12 4L13 6L14 4' stroke='#ffd700' strokeWidth='1' strokeLinecap='round' opacity='0.7' />
-    </svg>
-);
-
 const TrackSignalsIcon = () => (
     <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
         {/* Radar/Scanner circle */}
@@ -3738,41 +3709,6 @@ const AppWrapper = observer(() => {
                             id='id-dtrader'
                         >
                             <DTraderIframe />
-                        </div>
-
-                        {/* RICH MOTHER TAB */}
-                        <div
-                            label={
-                                <>
-                                    <RichMotherIcon />
-                                </>
-                            }
-                            id='id-rich-mother'
-                            className='rich-mother-tab-content'
-                        >
-                            <div
-                                className='rich-mother-container'
-                                style={{
-                                    width: '100%',
-                                    height: 'calc(100vh - 120px)',
-                                    minHeight: 'calc(100vh - 120px)',
-                                    overflow: 'hidden',
-                                    background: '#fff',
-                                }}
-                            >
-                                <iframe
-                                    src='/RichMother/index.html'
-                                    title='💎 Advanced Trading Tool'
-                                    style={{
-                                        width: '100%',
-                                        height: '100%',
-                                        border: 'none',
-                                        display: 'block',
-                                    }}
-                                    allow='clipboard-write'
-                                    sandbox='allow-same-origin allow-scripts allow-forms allow-popups allow-modals'
-                                />
-                            </div>
                         </div>
 
                         {/* ELVIS ZONE TAB - MOVED TO ANALYSIS TOOL */}

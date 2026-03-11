@@ -54,9 +54,6 @@ const DigitHackerPage = lazy(() => import('../pages/digit-hacker-page').then(m =
 // Signal Savvy Page
 const SignalSavvyPage = lazy(() => import('../pages/signal-savvy-page').then(m => ({ default: m.default })));
 
-// Rich Mother Page
-const RichMotherPage = lazy(() => import('../pages/rich-mother-page').then(m => ({ default: m.default })));
-
 // Speed Bot Page
 const SpeedBotPage = lazy(() => import('../pages/speed-bot-page').then(m => ({ default: m.default })));
 
@@ -103,9 +100,6 @@ const router = createBrowserRouter(
 
             {/* Signal Savvy Page */}
             <Route path='signal-savvy' element={<SignalSavvyPage />} />
-
-            {/* Rich Mother Page */}
-            <Route path='rich-mother' element={<RichMotherPage />} />
 
             {/* Speed Bot Page */}
             <Route path='speed-bot' element={<SpeedBotPage />} />
