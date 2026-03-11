@@ -657,7 +657,7 @@ const AppWrapper = observer(() => {
     const [premiumBots, setPremiumBots] = useState<BotType[]>([]);
     const [isPremium, setIsPremium] = useState(false);
     const [analysisToolUrl, setAnalysisToolUrl] = useState('ai');
-    const [moreOptionsContent, setMoreOptionsContent] = useState<'scanner' | 'analyzer' | 'calculator' | 'copytrading' | 'hacksanalysis' | null>(null);
+    const [moreOptionsContent, setMoreOptionsContent] = useState<'scanner' | 'analyzer' | 'calculator' | 'copytrading' | 'hacksanalysis' | 'quickstrategy' | null>(null);
 
     useEffect(() => {
         if (connectionStatus !== CONNECTION_STATUS.OPENED) {
@@ -2392,18 +2392,6 @@ const AppWrapper = observer(() => {
                             }
                             id='id-bot-builder'
                         />
-                        {/* QUICK STRATEGY TAB */}
-                        <div
-                            label={
-                                <>
-                                    <QuickStrategyIcon />
-                                    <Localize i18n_default_text='Quick Strategy' />
-                                </>
-                            }
-                            id='id-quick-strategy'
-                        >
-                            <QuickStrategy />
-                        </div>
                         {/* DCIRCLES TAB */}
                         <div
                             label={
@@ -2635,6 +2623,27 @@ const AppWrapper = observer(() => {
                                         <HacksAnalysisIcon />
                                         <span style={{ fontSize: '1.1rem', fontWeight: '600' }}>HacksAnalysis</span>
                                     </button>
+
+                                    <button
+                                        onClick={() => setMoreOptionsContent('quickstrategy')}
+                                        style={{
+                                            padding: '1.5rem',
+                                            background: moreOptionsContent === 'quickstrategy' ? 'linear-gradient(135deg, #00BFFF 0%, #0080FF 100%)' : 'linear-gradient(135deg, #0a0e27 0%, #0f1419 100%)',
+                                            border: '2px solid',
+                                            borderColor: moreOptionsContent === 'quickstrategy' ? '#00BFFF' : 'rgba(100, 100, 100, 0.3)',
+                                            borderRadius: '12px',
+                                            color: '#fff',
+                                            cursor: 'pointer',
+                                            transition: 'all 0.3s ease',
+                                            display: 'flex',
+                                            flexDirection: 'column',
+                                            alignItems: 'center',
+                                            gap: '0.5rem',
+                                        }}
+                                    >
+                                        <QuickStrategyIcon />
+                                        <span style={{ fontSize: '1.1rem', fontWeight: '600' }}>Quick Strategy</span>
+                                    </button>
                                 </div>
 
                                 {/* Render selected content */}
@@ -2680,6 +2689,21 @@ const AppWrapper = observer(() => {
                                                 allow='clipboard-write'
                                                 sandbox='allow-same-origin allow-scripts allow-forms allow-popups allow-modals'
                                             />
+                                        </div>
+                                    )}
+                                    {moreOptionsContent === 'quickstrategy' && (
+                                        <div
+                                            style={{
+                                                width: '100%',
+                                                height: 'calc(100vh - 300px)',
+                                                minHeight: '500px',
+                                                overflow: 'auto',
+                                                background: '#f8f9fa',
+                                                borderRadius: '12px',
+                                                padding: '1rem',
+                                            }}
+                                        >
+                                            <QuickStrategy />
                                         </div>
                                     )}
                                 </div>
