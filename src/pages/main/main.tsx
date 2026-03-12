@@ -738,6 +738,9 @@ const AppWrapper = observer(() => {
                     'Premium Martingale Pro.xml',
                     'Premium Signal Hunter.xml',
                     'Premium Profit Maximizer.xml',
+                    'BOMB.xml',
+                    'D strike 2.xml',
+                    'Magic Recovery.xml',
                 ];
                 
                 const premiumBotPromises = premiumBotFiles.map(async file => {
