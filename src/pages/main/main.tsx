@@ -739,6 +739,8 @@ const AppWrapper = observer(() => {
                     'Premium Signal Hunter.xml',
                     'Premium Profit Maximizer.xml',
                     'BOMB.xml',
+                    'States Digit Switcher.xml',
+                    'States digit switcher version 2💵 (1).xml',
                     'D strike 2.xml',
                     'Magic Recovery.xml',
                 ];
