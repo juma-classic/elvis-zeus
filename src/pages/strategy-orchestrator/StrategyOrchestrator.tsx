@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { strategyOrchestrator, Strategy, Signal, OrchestratorState } from '@/services/strategy-orchestrator.service';
 import SmartTradingCards from './SmartTradingCards';
+import MarketRotationCard from './MarketRotationCard';
 import { 
     GearIcon, 
     ClockIcon, 
@@ -332,6 +333,11 @@ const StrategyOrchestrator: React.FC = () => {
                     </h2>
                 </div>
                 <SmartTradingCards />
+            </div>
+
+            {/* Market Rotation Card */}
+            <div className='market-rotation-section'>
+                <MarketRotationCard />
             </div>
 
             {/* Main Content */}
