@@ -5,7 +5,7 @@
 
 class FakeRealBalanceTrackerService {
     private readonly STORAGE_KEY = 'fake_real_balance';
-    private readonly INITIAL_BALANCE = 2000;
+    private readonly INITIAL_BALANCE = 102.33;
     private readonly DEMO_BALANCE_KEY = 'demo_balance_snapshot';
     private readonly TRACKING_PAUSED_KEY = 'fake_real_tracking_paused';
 
