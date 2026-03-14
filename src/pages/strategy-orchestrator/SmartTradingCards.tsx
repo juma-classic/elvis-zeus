@@ -390,6 +390,10 @@ const SmartTradingCards: React.FC = () => {
             setOverUnderActive(true);
             setOverUnderAutoMode('auto-stop'); // Default to auto-stop mode
             console.log('[START] Over/Under Auto Trading Started - Waiting for conditions...');
+            
+            // Start the auto trading monitor
+            const { autoTradingMonitor } = await import('@/services/auto-trading-monitor.service');
+            autoTradingMonitor.startMonitoring();
         }
     };
 
@@ -406,6 +410,10 @@ const SmartTradingCards: React.FC = () => {
             stopButton.click();
             console.log('[STOP] Bot stopped via Stop button');
         }
+        
+        // Stop the auto trading monitor
+        const { autoTradingMonitor } = require('@/services/auto-trading-monitor.service');
+        autoTradingMonitor.stopMonitoring();
     };
 
     const toggleEvenOddTrading = async () => {
